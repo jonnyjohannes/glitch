@@ -22,7 +22,6 @@ Ensures vault notes have proper YAML frontmatter with tags. Does not restructure
 Accept a file path, folder path, or "all".
 In "all" mode scan all dirs and follow symlinks.
 Skip:
-- `smrtrobot/` — has its own [[skill-sharpener]]
 - `.obsidian/` — config, not notes
 
 **Scratch notes** — when targeting scratch/:
@@ -49,7 +48,7 @@ Body content.
 ```
 
 - **Add/fix YAML frontmatter** — `tags` as bracket-list, tag sparingly and meaningfully
-- **Tag sparingly** — 2-4 tags per note. Tags are shared with smrtrobot skills so graph connections emerge.
+- **Tag sparingly** — 2-5 tags per note. Tags are shared with smrtrobot skills so graph connections emerge.
 - **Remove orphaned inline hashtags** — if `#tags` exist in the body as metadata (not prose), move them to frontmatter
 - **Never delete body content** — only touch metadata
 
