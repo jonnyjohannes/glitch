@@ -5,7 +5,7 @@ description: >-
   a clean SKILL.md that follows the create-skill template. Use when the user
   says "refine skill", "update skill", "clean up skill", or has manually edited
   a SKILL.md and wants the changes properly integrated.
-tags: [skill]
+tags: [skill, meta-skill]
 ---
 
 # Refine Skill

@@ -4,7 +4,7 @@ description: >-
   Create new agent skills in the skills library. Use when the user wants to
   create, write, author, or add a new skill, or asks about skill structure,
   SKILL.md format, or this skills library.
-tags: [skill]
+tags: [skill, meta-skill]
 ---
 
 # Create Skill

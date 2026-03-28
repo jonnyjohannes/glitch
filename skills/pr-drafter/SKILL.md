@@ -5,7 +5,7 @@ description: >-
   diff, linked issue context, build status, and relevant internal documentation.
   Matches the repo's PR template if one exists. Use when the user asks to
   "draft a PR", "write my PR description", or "create a pull request".
-tags: [skill]
+tags: [skill, github, authoring]
 ---
 
 # PR Drafter

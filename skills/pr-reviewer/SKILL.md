@@ -8,7 +8,7 @@ description: >-
   CLI unless the user asked for a local/draft-only review. Use when the user asks
   for a PR review, code review before merge, feedback on a pull request, or to
   post review comments to a GitHub PR by URL or number.
-tags: [skill]
+tags: [skill, github, code-review]
 ---
 
 # Review GitHub PR

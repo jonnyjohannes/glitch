@@ -6,7 +6,7 @@ description: >-
   source language. Use when the user provides a name, passage, or reference
   to an ancient or classical text and wants a transliteration with translation,
   or asks to transliterate, romanize, or explain a text in another language.
-tags: [skill]
+tags: [skill, authoring, translation]
 ---
 
 # Rosetta Stoner

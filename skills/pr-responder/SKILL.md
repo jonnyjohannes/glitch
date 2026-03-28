@@ -7,7 +7,7 @@ description: >-
   inline reply comments for each resolved or pushed-back item. Use when the user asks
   to address, fix, or resolve PR review comments, or when given a PR URL/number and
   asked to handle reviewer feedback. Never changes business logic.
-tags: [skill]
+tags: [skill, github, code-review]
 ---
 
 # PR Review Resolver
