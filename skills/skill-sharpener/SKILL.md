@@ -1,5 +1,5 @@
 ---
-name: refine-skill
+name: skill-sharpener
 description: >-
   Refine an existing skill by incorporating manual edits (git diffs) back into
   a clean SKILL.md that follows the create-skill template. Use when the user
@@ -59,8 +59,10 @@ Write the updated file. Do not ask for confirmation on the rewrite unless the ch
 If the skill's `description` changed, update the matching row in `skills/README.md`:
 
 ```markdown
-| [[skill-name]] | Updated description here |
+| [[skill-name]] | Short description (max 100 chars) |
 ```
+
+TOC descriptions must be **100 characters or fewer**. The full description lives in the SKILL.md frontmatter.
 
 If the skill isn't in the TOC yet (untracked new file scenario), add it following alphabetical order or the existing grouping convention.
 

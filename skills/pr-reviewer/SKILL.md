@@ -1,5 +1,5 @@
 ---
-name: review-gh-pr
+name: pr-reviewer
 description: >-
   Reviews GitHub pull requests with structured, actionable feedback prioritizing
   correctness, simplicity, readability, maintainability, and team-appropriate best

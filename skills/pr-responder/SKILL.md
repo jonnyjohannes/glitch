@@ -1,5 +1,5 @@
 ---
-name: gh-pr-review-resolver
+name: pr-responder
 description: >-
   Pulls GitHub PR review comments via MCP (or gh CLI fallback), evaluates each
   against actual codebase behavior, test coverage, and architectural context before

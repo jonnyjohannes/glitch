@@ -1,5 +1,5 @@
 ---
-name: write-tech-spec
+name: tech-spec-transcriber
 description: >-
   Collaboratively design and write technical specification documents. Acts as an
   architectural design partner -- asking clarifying questions and iterating on

@@ -1,5 +1,5 @@
 ---
-name: create-skill
+name: skill-creator
 description: >-
   Create new agent skills in the skills library. Use when the user wants to
   create, write, author, or add a new skill, or asks about skill structure,
@@ -137,8 +137,10 @@ After creating the skill, add it to both tables:
 2. `README.md` (root) — the vault table of contents
 
 ```markdown
-| [[skill-name]] | Brief description of what it does |
+| [[skill-name]] | Brief description (max 100 chars) |
 ```
+
+TOC descriptions must be **100 characters or fewer** — keep them punchy. The full description lives in the SKILL.md frontmatter.
 
 If the skill maps to an agent persona in [[AGENTS]], add it to that persona's skill list there and in the root README agents table too.
 
