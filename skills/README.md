@@ -6,9 +6,9 @@ tags: [skill, index]
 
 | Skill                     | Description                                                                         |
 | ------------------------- | ----------------------------------------------------------------------------------- |
+| [[note-sharpener]]        | Standardize note frontmatter and tagging across the vault                           |
 | [[pr-drafter]]            | Draft a PR description from git diff, linked issue, build status, and internal docs |
 | [[pr-responder]]          | Triage and resolve PR review comments — fix, push back, or reply inline             |
-| [[note-sharpener]]        | Standardize metadata format, and tagging for vault notes                            |
 | [[pr-reviewer]]           | Structured GitHub PR review with optional post via MCP or gh CLI                    |
 | [[rosetta-stoner]]        | Transliterate and translate classical and sacred texts with line-by-line meanings   |
 | [[skill-creator]]         | Create new agent skills in this library                                             |
