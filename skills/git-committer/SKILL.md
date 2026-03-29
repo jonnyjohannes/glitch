@@ -92,7 +92,7 @@ For each group, in order:
 - **Lowercase**, no period at the end
 - **Present tense imperative**: "add", "fix", "remove", "extract", "update"
 - **Short** — aim for under 50 chars, hard cap at 72
-- Lead with the *what*, not the *why* (save *why* for the body if needed)
+- Lead with the _what_, not the _why_ (save _why_ for the body if needed)
 - No conventional-commit prefixes unless the repo already uses them
   (check `git log --oneline -10` first)
 

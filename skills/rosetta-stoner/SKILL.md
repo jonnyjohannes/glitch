@@ -25,21 +25,25 @@ Given a name, passage, or reference to an ancient or classical text, produce an 
 Add new language sections here as needed. For any language not listed, choose the most widely accepted romanization system and name it.
 
 ### Chinese
+
 - Provide the original characters, then pinyin with tone marks on the line below.
 - Structure: characters line, pinyin line, English meaning line.
 - For classical Chinese, gloss grammatical particles that have no direct English equivalent.
 
 ### Latin
+
 - Preserve original Latin orthography (no transliteration needed since Latin uses the Roman alphabet).
 - Provide macrons on vowels where they affect meaning or meter (ā, ē, ī, ō, ū).
 - Note meter or rhetorical structure when relevant to meaning.
 
 ### Sanskrit / Pali
+
 - Use simplified IAST romanization. Include diacritics only for characters that distinguish meaning (ś, ṣ, ṇ, ā, ī, ū).
 - Capitalize first word of each phrase and proper nouns.
 - Keep seed syllables (Om, Hum, Hrih, etc.) untranslated; note symbolic significance.
 
 ### Other Languages
+
 - If the text passed through multiple languages historically (e.g., Sanskrit → Chinese → Japanese), note the transmission path and transliterate from the most relevant layer.
 
 ## Output Format
@@ -70,7 +74,7 @@ _[Pinyin with tone marks]_
 
 ### Formatting rules
 
-- Each transliterated line is *italicized* on its own line.
+- Each transliterated line is _italicized_ on its own line.
 - The English meaning follows immediately below, unitalicized.
 - Separate each pair/group with a blank line.
 - Group lines into logical stanzas or sections when the text has natural divisions. Use `## Section Name` headers for major divisions (e.g., invocation, main body, closing).

@@ -40,7 +40,6 @@ tags: [skill, github, authoring]
 
 7. **Confirm CI is green** — `list_builds` (`user-buildkite`) filtered by branch.
    Check `state` of the most recent build.
-
    - If `passed`: note this in the PR ("CI: ✓ passing").
    - If no build found: note "CI not yet triggered".
 
@@ -63,35 +62,49 @@ If no template exists, use this structure:
 
 ```markdown
 ## Summary
+
 <!-- 2–4 bullet points: what changed and why -->
-- 
-- 
+
+-
+-
 
 ## Motivation
+
 <!-- Link to issue, design doc, or explain the problem being solved -->
+
 Closes #<issue> (if applicable)
 
 ## Changes
+
 <!-- Grouped by concern, not by file -->
+
 - **<Component A>**: <what changed>
 - **<Component B>**: <what changed>
 
 ## Test plan
+
 <!-- How to verify this works; what tests were added or updated -->
+
 - [ ] Unit tests: `pytest tests/unit/...`
 - [ ] Manual verification: <steps>
 
 ## Performance / cost impact
+
 <!-- Especially for BQ query changes, batch size changes, or new API calls -->
-N/A  <!-- or fill in -->
+
+N/A <!-- or fill in -->
 
 ## Rollback plan
+
 <!-- How to revert if this causes issues in prod -->
-Revert this PR. No schema or data migrations required.  <!-- adjust as needed -->
+
+Revert this PR. No schema or data migrations required. <!-- adjust as needed -->
 
 ## Related
+
 <!-- Internal docs, ADRs, prior PRs -->
-- 
+
+-
 ```
 
 ## Phase 6: Review Before Posting

@@ -24,6 +24,7 @@ Format and standardize documents — autoformat first, then metadata. Designed a
 Accept a file path, folder path, or "all".
 In "all" mode scan all dirs and follow symlinks.
 Skip:
+
 - `.obsidian/` — config, not notes
 - binary files, images, PDFs
 
@@ -47,7 +48,7 @@ Read each target's full content and derive 3-5 tags.
 
 ### Tagging principles
 
-- **Substance over structure** — tag what the doc is *about*, not what format it is ("api-auth" not "notes")
+- **Substance over structure** — tag what the doc is _about_, not what format it is ("api-auth" not "notes")
 - **Graph-aware** — tags are shared across skills and notes. Prefer tags that create meaningful connections in the vault graph over one-off labels
 - **Sparse and deliberate** — 3-5 tags max. If you can't justify a tag's existence in the graph, drop it
 - **Flat hierarchy** — no nested tags (`topic/subtopic`), just simple lowercase kebab-case tokens

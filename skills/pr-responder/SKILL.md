@@ -30,10 +30,10 @@ tags: [skill, github, code-review]
 
 Classify every unresolved thread:
 
-| Class | Criteria | Action |
-|---|---|---|
-| **Implement** | Correct, well-scoped, consistent with existing patterns | Fix it |
-| **Clarify** | Ambiguous intent or multiple valid interpretations | Block; ask user |
+| Class         | Criteria                                                                 | Action                                         |
+| ------------- | ------------------------------------------------------------------------ | ---------------------------------------------- |
+| **Implement** | Correct, well-scoped, consistent with existing patterns                  | Fix it                                         |
+| **Clarify**   | Ambiguous intent or multiple valid interpretations                       | Block; ask user                                |
 | **Push back** | Breaks functionality, YAGNI, contradicts established pattern, no context | Explain technically; skip unless user confirms |
 
 **Push back triggers — use code evidence, not opinion:**
@@ -82,6 +82,7 @@ For each Implement item:
 3. **Reply format — describe what changed, not feelings:**
 
    Implemented fix:
+
    ```
    Fixed: <one sentence — what was changed, in which file/function, and why it
    satisfies the comment>. E.g. "Moved X validation into _validate() so it's
@@ -89,6 +90,7 @@ For each Implement item:
    ```
 
    Pushed back:
+
    ```
    Not implemented: <technical reason with evidence>. E.g. "This would change the
    return type consumed by bar.py:L91 which expects a dict; test_bar.py:L34
@@ -96,6 +98,7 @@ For each Implement item:
    ```
 
    Clarified and resolved per user guidance:
+
    ```
    Implemented per clarification: <what was done>.
    ```

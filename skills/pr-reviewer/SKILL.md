@@ -44,15 +44,15 @@ If review comments already exist on the PR, optionally fetch them (`get_review_c
 
 ## What to evaluate
 
-| Area | Focus |
-|------|--------|
-| **Correctness** | Logic, edge cases, error paths, data contracts, race or consistency issues |
-| **Tests** | Gaps for new behavior, brittle tests, missing negative cases |
-| **Security & privacy** | Authz, secrets, injection, logging of sensitive data |
-| **Simplicity** | YAGNI, dead code, over-engineering, unnecessary dependencies |
-| **Readability** | Naming, structure, comments (only where they earn their keep) |
-| **Maintainability** | Coupling, duplication that should stay DRY, observability, upgrade paths |
-| **Performance** | Only when the change introduces hot paths, N+1 queries, or obvious inefficiency |
+| Area                   | Focus                                                                           |
+| ---------------------- | ------------------------------------------------------------------------------- |
+| **Correctness**        | Logic, edge cases, error paths, data contracts, race or consistency issues      |
+| **Tests**              | Gaps for new behavior, brittle tests, missing negative cases                    |
+| **Security & privacy** | Authz, secrets, injection, logging of sensitive data                            |
+| **Simplicity**         | YAGNI, dead code, over-engineering, unnecessary dependencies                    |
+| **Readability**        | Naming, structure, comments (only where they earn their keep)                   |
+| **Maintainability**    | Coupling, duplication that should stay DRY, observability, upgrade paths        |
+| **Performance**        | Only when the change introduces hot paths, N+1 queries, or obvious inefficiency |
 
 **Deprioritize** pure formatting or style that tooling already enforces, unless the PR violates repo conventions.
 
@@ -79,29 +79,37 @@ Deliver a single review in this structure (adjust headings if the user asked for
 # PR review: <title or PR #>
 
 ## Verdict
+
 **Approve** | **Approve with nits** | **Request changes** — one sentence why.
 
 ## Summary
+
 2–4 sentences on what the PR does and overall quality.
 
 ## Strengths
+
 - Bullet list of concrete good decisions (with references).
 
 ## Issues
 
 ### Blocking (must fix before merge)
+
 - **<file>:** <issue> — <why it matters> — <suggestion>.
 
 ### Major (should fix)
+
 - ...
 
 ### Minor / nits (optional)
+
 - ...
 
 ## Questions for author
+
 - Clarifications that affect correctness or design (not idle curiosity).
 
 ## Suggested follow-ups (non-blocking)
+
 - Test ideas, refactors, or docs that can be separate PRs.
 ```
 
@@ -118,10 +126,10 @@ Same flow as [[pr-responder]] Phase 4, but inline bodies are **new review feedba
 
 ### Map verdict → GitHub event
 
-| Verdict in review | GitHub review `event` |
-|-------------------|------------------------|
-| **Request changes** | `REQUEST_CHANGES` |
-| **Approve** | `APPROVE` |
+| Verdict in review     | GitHub review `event`                          |
+| --------------------- | ---------------------------------------------- |
+| **Request changes**   | `REQUEST_CHANGES`                              |
+| **Approve**           | `APPROVE`                                      |
 | **Approve with nits** | `APPROVE` (nits in summary body and/or inline) |
 
 Use **`COMMENT`** instead when the user asked for non-binding feedback, when org policy treats all bot/agent output as comment-only, or when unsure whether approval should count — the full structured body still attaches to the review.
@@ -163,7 +171,7 @@ Confirm in chat with the PR link, **`event`**, and **count of inline comments** 
 
 ### Optional line in the summary body
 
-If many inline comments were added, one short line near the top of the summary is fine, e.g. *“Inline notes added on the diff for line-specific questions and fixes.”* Do not replace detailed bullets with that line alone.
+If many inline comments were added, one short line near the top of the summary is fine, e.g. _“Inline notes added on the diff for line-specific questions and fixes.”_ Do not replace detailed bullets with that line alone.
 
 ## After the review
 
