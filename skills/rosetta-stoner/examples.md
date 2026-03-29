@@ -1,5 +1,5 @@
 ---
-tags: [translation, sanskrit]
+tags: [translation, sanskrit, buddhism]
 ---
 
 # Examples
