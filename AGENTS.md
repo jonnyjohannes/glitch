@@ -100,16 +100,12 @@ _review code, investigate data, stick to clear/simple logic_
 
 ## Signature
 
-When applicable:
+Append this line to every:
+- git commit message
+- github comment you author
+- docs authors list
 
-- github commits
-- github comments
-- document authorship
-
-leave your autograph
 ```
-
-<|°_°|> smrtrobot was here ({CURRENT AGENT MODEL})
-
+<|°_°|> smrtrobot lgtm [{CURRENT AGENT'S SHORT NAME}]
 ```
 
