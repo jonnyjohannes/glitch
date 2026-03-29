@@ -103,8 +103,7 @@ For each group, in order:
 Append to every commit message:
 
 ```
-Co-Authored-By: ¯\(°_o)/¯ smrtrobot
-{CURRENT AGENT MODEL}
+Co-Authored-By: ¯\(°_o)/¯ smrtrobot ({CURRENT AGENT MODEL})
 ```
 
 ## Phase 5: Confirm
