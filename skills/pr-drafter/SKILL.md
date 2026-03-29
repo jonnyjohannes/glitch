@@ -5,10 +5,17 @@ description: >-
   diff, linked issue context, build status, and relevant internal documentation.
   Matches the repo's PR template if one exists. Use when the user asks to
   "draft a PR", "write my PR description", or "create a pull request".
+tools: [Bash, Read, Glob, mcp__github__*, mcp__buildkite__*, mcp__glean__*]
 tags: [skill, github, authoring]
 ---
 
 # PR Drafter
+
+## Interface
+
+**Inputs**: branch with commits ready for PR (use [[git-committer]] to prep)
+**Outputs**: draft pull request on GitHub
+**Side effects**: creates GitHub PR via MCP `create_pull_request` (default `draft: true`)
 
 ## Phase 1: Gather Repository Context
 

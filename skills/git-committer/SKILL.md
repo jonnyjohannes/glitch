@@ -6,12 +6,21 @@ description: >-
   group, and commit with concise punchy messages. Use when the user says
   "smart commit", "group and commit", "chunk commits", "commit these changes",
   or wants to break a messy working tree into clean atomic commits.
+tools: [Bash]
 tags: [skill, git, workflow]
 ---
 
 # Git Committer
 
 Break a dirty working tree into clean, atomic commits — each with a punchy message.
+
+## Interface
+
+**Inputs**: dirty working tree (unstaged/staged changes, untracked files)
+**Outputs**: clean atomic git commits with punchy messages
+**Side effects**: creates git commits; may reset staging area between groups
+
+Once commits land, [[pr-drafter]] is the natural next step.
 
 ## Phase 1: Survey the Damage
 

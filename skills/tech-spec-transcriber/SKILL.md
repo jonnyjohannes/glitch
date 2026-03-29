@@ -6,10 +6,17 @@ description: >-
   the design before producing a detailed tech spec markdown file. Use when the
   user wants to write a tech spec, design a system, architect a solution, plan a
   feature, or create a technical design document.
+tools: [Read, Write, Glob, Grep]
 tags: [skill, authoring, docs]
 ---
 
 # Write Tech Spec
+
+## Interface
+
+**Inputs**: problem description + referenced files, docs, or code
+**Outputs**: tech spec markdown file (implementation-ready)
+**Side effects**: writes spec file to disk (user chooses path)
 
 Act as an architectural design partner. Through conversation, help the user think through a problem, converge on a design, and produce a tech spec markdown file that another agent can use to implement the solution.
 

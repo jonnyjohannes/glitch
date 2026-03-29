@@ -6,10 +6,17 @@ description: >-
   source language. Use when the user provides a name, passage, or reference
   to an ancient or classical text and wants a transliteration with translation,
   or asks to transliterate, romanize, or explain a text in another language.
+tools: [Read, WebSearch]
 tags: [skill, authoring, translation]
 ---
 
 # Rosetta Stoner
+
+## Interface
+
+**Inputs**: text name, passage, or reference to a classical/sacred text
+**Outputs**: formatted markdown with romanized transliteration + line-by-line English meanings
+**Side effects**: none (output only)
 
 Given a name, passage, or reference to an ancient or classical text, produce an English-readable romanized transliteration with line-by-line meanings. Optimized for readers whose first language is English.
 

@@ -5,10 +5,17 @@ description: >-
   Format documents via nvim conform and update YAML frontmatter metadata (tags,
   etc.). Use when the user says "polish docs", "format notes", "tag this",
   "clean up notes", or wants docs formatted and metadata standardized.
+tools: [Read, Edit, Bash, Glob]
 tags: [skill, docs, workflow]
 ---
 
 # Doc Polisher
+
+## Interface
+
+**Inputs**: file path, folder path, or "all"
+**Outputs**: formatted files with standardized YAML frontmatter (tags, etc.)
+**Side effects**: modifies files on disk (autoformat via nvim conform + frontmatter updates)
 
 Format and standardize documents — autoformat first, then metadata. Designed as a pipeline: each step is independent so new steps can be added later.
 

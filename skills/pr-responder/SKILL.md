@@ -7,10 +7,17 @@ description: >-
   inline reply comments for each resolved or pushed-back item. Use when the user asks
   to address, fix, or resolve PR review comments, or when given a PR URL/number and
   asked to handle reviewer feedback. Never changes business logic.
+tools: [Read, Edit, Bash, mcp__github__*]
 tags: [skill, github, code-review]
 ---
 
 # PR Review Resolver
+
+## Interface
+
+**Inputs**: PR with unresolved review comments (from [[pr-reviewer]] or human reviewers)
+**Outputs**: code fixes + inline reply comments on each resolved thread
+**Side effects**: commits and pushes to branch, posts GitHub review replies via MCP
 
 ## Phase 1: Context Gathering
 

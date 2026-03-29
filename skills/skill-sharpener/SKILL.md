@@ -4,10 +4,17 @@ description: >-
   Refines an existing skill by reconciling manual edits, diffs, and drift back
   into a clean, template-compliant SKILL.md. Use when updating, cleaning up, or
   aligning a skill with current agentic best practices.
+tools: [Read, Edit, Bash, Glob]
 tags: [skill, meta-skill]
 ---
 
 # Refine Skill
+
+## Interface
+
+**Inputs**: existing skill with pending edits, drift, or cleanup needed
+**Outputs**: rewritten SKILL.md aligned with [[skill-creator]] template
+**Side effects**: modifies SKILL.md, may update `skills/README.md` descriptions
 
 Companion to [[skill-creator]].
 
@@ -106,7 +113,10 @@ Run the [[skill-creator]] verification checklist:
 - [ ] `name` field: lowercase, hyphens only, max 64 chars
 - [ ] `aliases: [<skill-name>]` matches `name`
 - [ ] `description`: third person, includes what + when, has trigger terms
-- [ ] `tags: [skill]` in frontmatter
+- [ ] `tools`: lists required tools (Bash, Read, Edit, mcp__*, etc.)
+- [ ] `tags: [skill, ...]` includes `skill` + at least one domain tag
+- [ ] `## Interface` section present with inputs, outputs, side effects
+- [ ] Cross-links to composable skills where natural
 - [ ] Wikilinks to related skills and [[AGENTS]] where appropriate
 - [ ] Body under 300 lines
 - [ ] Consistent terminology

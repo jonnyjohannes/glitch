@@ -4,10 +4,17 @@ description: >-
   Creates new skills from scratch by gathering requirements and generating a
   canonical SKILL.md. Use when a skill does not exist or when starting from a
   blank slate.
+tools: [Read, Write, Edit, Glob]
 tags: [skill, meta-skill]
 ---
 
 # Create Skill
+
+## Interface
+
+**Inputs**: user intent for a new skill (what it does, when it triggers)
+**Outputs**: canonical SKILL.md in `skills/<name>/` + README entries
+**Side effects**: creates skill directory and files, updates `skills/README.md`
 
 Defines how new skills are introduced into the system.
 
@@ -61,9 +68,22 @@ name: your-skill-name
 aliases: [your-skill-name]
 description: >-
   What it does and when to use it. Include trigger language.
-tags: [skill]
+tools: [Read, Edit, Bash]  # tools this skill needs
+tags: [skill, domain-tag]
 ---
 ```
+
+### Interface section (required, after intro)
+
+```markdown
+## Interface
+
+**Inputs**: what the skill needs to start
+**Outputs**: what it produces
+**Side effects**: external state changes (git commits, GitHub comments, file writes, etc.)
+```
+
+Keep it terse — one line each. Link related skills in the interface or intro when they naturally compose (e.g., "use [[git-committer]] to prep commits first").
 
 ### Body Principles
 
@@ -133,9 +153,13 @@ Add to:
 ### Verify
 
 - [ ] Correct directory
-- [ ] Valid frontmatter
+- [ ] Valid frontmatter (name, aliases, description, tools, tags)
+- [ ] `tools` field lists required tools
+- [ ] `tags` include `skill` + at least one domain tag
 - [ ] Description includes what + when
 - [ ] Aliases match name
+- [ ] `## Interface` section present (inputs, outputs, side effects)
+- [ ] Cross-links to composable skills where natural
 - [ ] Under 300 lines
 - [ ] Terminology consistent
 - [ ] Wikilinks present where useful
