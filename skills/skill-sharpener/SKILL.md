@@ -113,7 +113,7 @@ Run the [[skill-creator]] verification checklist:
 - [ ] `name` field: lowercase, hyphens only, max 64 chars
 - [ ] `aliases: [<skill-name>]` matches `name`
 - [ ] `description`: third person, includes what + when, has trigger terms
-- [ ] `tools`: lists required tools (Bash, Read, Edit, mcp__*, etc.)
+- [ ] `tools`: lists required tools (Bash, Read, Edit, mcp\_\_\*, etc.)
 - [ ] `tags: [skill, ...]` includes `skill` + at least one domain tag
 - [ ] `## Interface` section present with inputs, outputs, side effects
 - [ ] Cross-links to composable skills where natural

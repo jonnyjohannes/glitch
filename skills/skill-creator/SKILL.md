@@ -68,7 +68,7 @@ name: your-skill-name
 aliases: [your-skill-name]
 description: >-
   What it does and when to use it. Include trigger language.
-tools: [Read, Edit, Bash]  # tools this skill needs
+tools: [Read, Edit, Bash] # tools this skill needs
 tags: [skill, domain-tag]
 ---
 ```
