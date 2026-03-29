@@ -106,6 +106,6 @@ Append this line to every:
 - docs authors list
 
 ```
-<|°_°|> smrtrobot lgtm [{CURRENT AGENT'S SHORT NAME}]
+<|°_°|> smrtrobot lgtm [{CURRENT AGENT'S MODEL SHORT NAME}]
 ```
 
