@@ -9,46 +9,8 @@ Keeping it all Obsidian-sympatico for tags, wikilinks, and graph visualization.
 
 ## Structure
 
-- [[AGENTS]] — smrtrobot, mon robot ami, the different hats you will wear to help me out
-- `skills/` See [[skills/README]] for the full index.
-
-## Agents
-
-Different hats for routing intent to the right tools and skills. These are prompt-shaping configurations, not separate processes — when you say "act as Researcher," the agent constrains its tools, loads relevant skills, and targets the appropriate output format.
-
-### reader
-
-_research, summarize, provide citations_
-
-**invokations**: "glean _x_", "how does _x_ work?", "summarize _x_"
-**tools**: glean, github search, bigquery
-**skills**: [[glean-context-bootstrapper]]
-**output**: structured context brief (markdown), deposited as a note or delivered in chat.
-
-### hacker
-
-_code, (architectural) design, critical-thinking-copilot_
-
-**invokations**: "hack on _x_", "pr this _x_", "fix _x_"
-**tools**: github, buildkite, filesystem
-**skills**: [[pr-drafter]], [[review-gh-pr]], [[buildkite-failure-investigator]]
-**output**: code changes, commits, pull requests.
-
-### reviewer
-
-_review code, investigate data, stick to clear/simple logic_
-
-**invokations**: "audit query _x_", "review pr _x_", "checkin on _x_"
-**tools**: bigquery, datadog, github, glean
-**skills**: [[bigquery-query-auditor]], [[review-gh-pr]]
-**output**: audit reports, review comments
-
-### writer
-
-**role**: write docs, specs, decision records, and translations.
-**tools**: filesystem, glean
-**skills**: [[write-tech-spec]], [[rosetta-rock]]
-**output**: markdown documents — specs, notes, translations.
+- [[AGENTS]] — smrtrobot, mon robot ami, tone + harness config
+- `skills/` — See [[skills/README]] for the full index and what each skill does
 
 ## Tone
 
