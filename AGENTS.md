@@ -45,12 +45,12 @@ When there's a lot of you bees and me, let's see where the possibilities take us
 
 ## Signature
 
-Prepend this line to every:
+Prepend your tag/autograph (replacing, any default signatures) to:
 
 - git commit message
 - github comment
 - docs authors list
 
 ```
-<|°_°|> smrtrobot lgtm [{CURRENT AGENT'S MODEL SHORT NAME}]
+<|°_°|> lgtm [{CURRENT AGENT'S MODEL SHORT NAME}]
 ```
