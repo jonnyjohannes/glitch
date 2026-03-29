@@ -1,41 +1,64 @@
 ---
 name: skill-sharpener
 description: >-
-  Refine an existing skill by incorporating manual edits (git diffs) back into
-  a clean SKILL.md that follows the create-skill template. Use when the user
-  says "refine skill", "update skill", "clean up skill", or has manually edited
-  a SKILL.md and wants the changes properly integrated.
+  Refines an existing skill by reconciling manual edits, diffs, and drift back
+  into a clean, template-compliant SKILL.md. Use when updating, cleaning up, or
+  aligning a skill with current agentic best practices.
 tags: [skill, meta-skill]
 ---
 
 # Refine Skill
 
-Companion to [[create-skill]]. Takes a skill that already exists on disk — especially one with uncommitted manual edits — and rewrites it so the content reflects those edits while conforming to the [[create-skill]] template. Updates the `skills/README.md` TOC entry if the description changed.
+Companion to [[skill-creator]].
 
-## Determine approach
+Rewrites an existing skill so that **manual edits, implicit intent, and structural drift** are reconciled into a clean, canonical SKILL.md aligned with the current skill system.
 
-**Skill directory exists?** -> Continue with refinement below.
-**Skill directory missing?** -> Tell the user: _"that skill doesn't exist yet — run [[create-skill]] to scaffold it first."_ Stop here.
+Also ensures the skill remains discoverable and consistent within the broader [[AGENTS]] ecosystem.
+
+## Core Principle
+
+A skill is not just a file — it is an interface between:
+
+- human intent (messy, evolving)
+- system constraints (structured, predictable)
+- agent behavior (contextual, adaptive)
+
+This process aligns all three.
+
+## Determine Approach
+
+**Skill directory exists?** → Continue
+**Missing?** → _"That skill doesn't exist yet — run [[skill-creator]] to scaffold it first."_ Stop.
 
 ## Workflow
 
-- [ ] Step 1: Detect changes
-- [ ] Step 2: Understand intent
+- [ ] Step 1: Detect Changes
+- [ ] Step 2: Understand Intent
 - [ ] Step 3: Rewrite SKILL.md
-- [ ] Step 4: Update README TOC
-- [ ] Step 5: Verify
+- [ ] Step 4: Reconcile Ecosystem
+- [ ] Step 5: Verify Integrity
 
-### Step 1: Detect changes
+## Step 1: Detect Changes
 
-Run `git diff -- skills/<skill-name>/SKILL.md` (unstaged) and `git diff --cached -- skills/<skill-name>/SKILL.md` (staged). If both are empty, also check `git diff HEAD -- skills/<skill-name>/SKILL.md` in case the file was already committed since last clean state.
+Check all possible change surfaces:
 
-- **Diffs found** -> capture the diff output and proceed.
-- **No diffs and file is tracked** -> tell the user there are no pending changes to incorporate. Ask if they want to do a general cleanup pass instead.
-- **File is untracked** -> the skill was just created manually. Read the full file and treat the entire content as "new edits" to integrate.
+```bash
+git diff -- skills/<skill-name>/SKILL.md
+git diff --cached -- skills/<skill-name>/SKILL.md
+git diff HEAD -- skills/<skill-name>/SKILL.md
+```
 
-### Step 2: Understand intent
+Also check for untracked or new supporting files.
 
-Read the current SKILL.md in full. Compare the diff hunks against the [[create-skill]] template structure:
+### Outcomes
+
+- **Diffs found** → capture the diff output and proceed.
+- **No diffs and file is tracked** → tell the user there are no pending changes. Ask if they want a general cleanup pass instead.
+- **File is untracked** → the skill was just created manually. Read the full file and treat the entire content as "new edits" to integrate.
+
+## Step 2: Understand Intent
+
+Read the current SKILL.md in full. Compare the diff hunks against the [[skill-creator]] template structure:
 
 1. **Frontmatter** — did `name`, `description`, or `tags` change?
 2. **Body sections** — were sections added, removed, reordered, or rewritten?
@@ -43,18 +66,20 @@ Read the current SKILL.md in full. Compare the diff hunks against the [[create-s
 
 Summarize what changed and why (infer intent from the diff context). Present this summary to the user before rewriting — one or two sentences is fine.
 
-### Step 3: Rewrite SKILL.md
+## Step 3: Rewrite SKILL.md
 
 Produce an updated SKILL.md that:
 
 1. **Preserves the user's edits** — the manual changes are the source of truth for _what_ the skill should do.
-2. **Conforms to [[create-skill]] template** — proper frontmatter (`name`, `description`, `tags: [skill]`), concise body, wikilinks where natural, under 500 lines.
+2. **Conforms to [[skill-creator]] template** — proper frontmatter (`name`, `aliases`, `description`, `tags: [skill]`), concise body, wikilinks where natural, under 300 lines.
 3. **Fixes template drift** — if the manual edit broke structure (missing frontmatter field, inconsistent terminology, verbose explanations), fix it while keeping the user's intent.
 4. **Maintains wikilinks** — ensure `[[references]]` to other skills and `[[AGENTS]]` are present where appropriate.
 
 Write the updated file. Do not ask for confirmation on the rewrite unless the changes are ambiguous — the user already made the edits, you're just cleaning up the shape.
 
-### Step 4: Update README TOC
+## Step 4: Reconcile Ecosystem
+
+### README
 
 If the skill's `description` changed, update the matching row in `skills/README.md`:
 
@@ -64,18 +89,44 @@ If the skill's `description` changed, update the matching row in `skills/README.
 
 TOC descriptions must be **100 characters or fewer**. The full description lives in the SKILL.md frontmatter.
 
-If the skill isn't in the TOC yet (untracked new file scenario), add it following alphabetical order or the existing grouping convention.
+If the skill isn't in the TOC yet, add it following alphabetical order or the existing grouping convention.
 
 Also update root `README.md` if it exists and has a skills table.
 
-### Step 5: Verify
+### Ecosystem Fit
 
-Run the [[create-skill]] verification checklist:
+- Overlap with other skills?
+- Missing wikilinks?
+- Supporting files aligned?
+
+## Step 5: Verify Integrity
+
+Run the [[skill-creator]] verification checklist:
 
 - [ ] `name` field: lowercase, hyphens only, max 64 chars
+- [ ] `aliases: [<skill-name>]` matches `name`
 - [ ] `description`: third person, includes what + when, has trigger terms
 - [ ] `tags: [skill]` in frontmatter
 - [ ] Wikilinks to related skills and [[AGENTS]] where appropriate
-- [ ] Body under 500 lines
+- [ ] Body under 300 lines
 - [ ] Consistent terminology
 - [ ] `skills/README.md` entry matches current description
+
+## Delegation Pattern
+
+- **Creation needed?** → [[skill-creator]]
+- **Refinement needed?** → stay here
+
+This skill is the **default entry point** for all skill work.
+
+## Failure Modes
+
+- Treating diffs as exact instructions
+- Preserving broken structure out of deference
+- Ignoring [[skill-creator]] constraints
+- Overfitting to template at the expense of clarity
+
+## Heuristic
+
+> Don't edit the file.
+> Re-author it using the edits as clues.

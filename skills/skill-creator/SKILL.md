@@ -1,169 +1,154 @@
 ---
 name: skill-creator
 description: >-
-  Create new agent skills in the skills library. Use when the user wants to
-  create, write, author, or add a new skill, or asks about skill structure,
-  SKILL.md format, or this skills library.
+  Creates new skills from scratch by gathering requirements and generating a
+  canonical SKILL.md. Use when a skill does not exist or when starting from a
+  blank slate.
 tags: [skill, meta-skill]
 ---
 
 # Create Skill
 
-Guide for adding new skills to this library. Each skill is a directory under `skills/` containing a `SKILL.md` and optional supporting files. Skills are cross-compatible with both Cursor and Claude Code.
+Defines how new skills are introduced into the system.
 
-## Repo Layout
+If a skill already exists or has been manually edited, **do not use this directly** — use [[skill-sharpener]] instead.
 
-```
-skills/
-├── README.md
-├── create-skill/          # this meta-skill
-│   └── SKILL.md
-├── <skill-name>/
-│   ├── SKILL.md           # required - main instructions
-│   ├── reference.md       # optional - detailed docs
-│   ├── examples.md        # optional - usage examples
-│   └── scripts/           # optional - utility scripts
-└── ...
-```
+## Core Principle
+
+Creation is **structured extraction**.
+
+The goal is to turn vague intent into a **canonical skill** that:
+
+- activates reliably
+- integrates cleanly
+- requires minimal future correction
+
+## Determine Approach
+
+**Skill already exists?** →
+Delegate to [[skill-sharpener]] (refinement flow)
+
+**New skill?** → Continue
+
+## Workflow
+
+- [ ] Step 1: Gather Requirements
+- [ ] Step 2: Author SKILL.md
+- [ ] Step 3: Link into System
+- [ ] Step 4: Add Supporting Files (optional)
+- [ ] Step 5: Register + Verify
 
 ## Step 1: Gather Requirements
 
-Before writing anything, clarify with the user:
+Extract or infer:
 
-1. **What** does the skill do? (specific task or workflow)
-2. **When** should the agent use it? (trigger scenarios)
-3. **What domain knowledge** does the agent need that it wouldn't already have?
-4. **What output format** is expected? (templates, conventions, styles)
-5. **Are scripts needed?** (validation, automation, etc.)
+1. **What** does the skill do?
+2. **When** should it trigger?
+3. **What knowledge is non-obvious?**
+4. **What output shape is required?**
+5. **Are scripts needed?**
 
-If context from the conversation makes any of these obvious, infer rather than ask.
+If obvious from context, infer.
+If unclear, ask — don't guess.
 
-## Step 2: Write the SKILL.md
+## Step 2: Author SKILL.md
 
 ### Frontmatter (required)
 
 ```yaml
 ---
-name: your-skill-name        # lowercase, hyphens, max 64 chars
+name: your-skill-name
+aliases: [your-skill-name]
 description: >-
-  What it does and when to use it. Write in third person.
-  Include trigger terms the agent can match on.
-tags: [skill]                # required - enables Obsidian graph/search
+  What it does and when to use it. Include trigger language.
+tags: [skill]
 ---
 ```
 
-The `description` is critical -- the agent uses it to decide whether to activate the skill. Include both **what** it does and **when** to use it. Be specific.
+### Body Principles
 
-Good: "Generate commit messages from staged git diffs following conventional commits. Use when the user asks for help writing commit messages or committing changes."
+- Be concise — no basics
+- Prefer:
+  - **workflows** for procedures
+  - **templates** for outputs
+  - **conditionals** for branching
+- Keep under 300 lines
+- Use consistent terminology
 
-Bad: "Helps with git stuff."
+### Patterns
 
-### Body
+#### Workflow
 
-Write the body as instructions the agent should follow. Key principles:
+```markdown
+- [ ] Step 1: ...
+- [ ] Step 2: ...
+```
 
-- **Be concise.** The agent is already smart. Only include knowledge it wouldn't have -- project conventions, API quirks, team preferences, domain-specific patterns.
-- **Under 500 lines.** Use progressive disclosure: put essentials in SKILL.md, details in reference files one level deep.
-- **Set appropriate freedom.** High freedom (prose guidelines) for subjective tasks, low freedom (exact scripts/templates) for fragile operations.
-- **Use consistent terminology.** Pick one term for each concept and stick with it.
-
-### Common Patterns
-
-**Template pattern** -- provide an output format:
+#### Template
 
 ```markdown
 ## Output format
 
-\`\`\`markdown
-# [Title]
-## Summary
-[overview]
-## Details
-[specifics]
+\`\`\`
+...
 \`\`\`
 ```
 
-**Workflow pattern** -- step-by-step with a checklist:
+#### Conditional
 
 ```markdown
-## Workflow
-
-- [ ] Step 1: Analyze input
-- [ ] Step 2: Transform data
-- [ ] Step 3: Validate output
+**Case A?** → do X
+**Case B?** → do Y
 ```
 
-**Conditional pattern** -- decision trees:
+## Step 3: Link into System
+
+Add [[wikilinks]] naturally:
+
+- Reference related skills
+- Link [[AGENTS]] if persona-aligned
+- Connect companion skills
+
+## Step 4: Supporting Files (optional)
+
+- `reference.md` → deep detail
+- `examples.md` → input/output pairs
+- `scripts/` → deterministic helpers
+
+Keep everything **one level deep**
+
+## Step 5: Register + Verify
+
+### Register
+
+Add to:
 
 ```markdown
-## Determine approach
-
-**New file?** -> Follow "Creation" section
-**Existing file?** -> Follow "Editing" section
+| [[skill-name]] | Description (≤100 chars) |
 ```
 
-**Feedback loop pattern** -- for quality-critical tasks:
+- `skills/README.md`
+- root `README.md`
 
-```markdown
-1. Make changes
-2. Run `python scripts/validate.py`
-3. If validation fails, fix and re-run
-4. Only proceed when validation passes
-```
+### Verify
 
-## Step 3: Add Wikilinks
+- [ ] Correct directory
+- [ ] Valid frontmatter
+- [ ] Description includes what + when
+- [ ] Aliases match name
+- [ ] Under 300 lines
+- [ ] Terminology consistent
+- [ ] Wikilinks present where useful
+- [ ] README entries updated
 
-Use `[[wikilinks]]` to connect skills in the Obsidian graph:
+## Failure Modes
 
-- If the skill **composes or references another skill**, link it: `[[buildkite-failure-investigator]]`
-- If the skill **maps to an agent persona** in [[AGENTS]], mention it: `Used by the **Builder** persona (see [[AGENTS]]).`
-- If the skill has a **companion skill** (e.g., review-gh-pr ↔ gh-pr-review-resolver), cross-link them
+- Creating vague or overly broad skills
+- Over-explaining basics
+- Missing activation cues in description
+- Not linking into the ecosystem
 
-Wikilinks go in the body text where the reference is natural — don't add a dedicated "links" section. This keeps the graph accurate and the content readable.
+## Heuristic
 
-## Step 4: Add Supporting Files (if needed)
-
-- `reference.md` -- detailed API docs, extended examples, edge cases
-- `examples.md` -- concrete input/output pairs
-- `scripts/` -- utility scripts that are more reliable than generated code
-
-Keep references **one level deep** from SKILL.md. No nested chains.
-
-## Step 5: Register in READMEs
-
-After creating the skill, add it to both tables:
-
-1. `skills/README.md` — the skill index
-2. `README.md` (root) — the vault table of contents
-
-```markdown
-| [[skill-name]] | Brief description (max 100 chars) |
-```
-
-TOC descriptions must be **100 characters or fewer** — keep them punchy. The full description lives in the SKILL.md frontmatter.
-
-If the skill maps to an agent persona in [[AGENTS]], add it to that persona's skill list there and in the root README agents table too.
-
-## Step 6: Verify
-
-Before finishing, check:
-
-- [ ] Directory is under `skills/`: `skills/<skill-name>/SKILL.md`
-- [ ] `name` field: lowercase, hyphens only, max 64 chars
-- [ ] `description`: third person, includes what + when, has trigger terms
-- [ ] `tags: [skill]` in frontmatter
-- [ ] Wikilinks to related skills and [[AGENTS]] where appropriate
-- [ ] Body is under 500 lines
-- [ ] Terminology is consistent throughout
-- [ ] Any file references from SKILL.md are one level deep
-- [ ] `skills/README.md` is updated with the new skill
-- [ ] Root `README.md` skills table is updated
-- [ ] If skill maps to an agent persona: [[AGENTS]] and root README agents table updated
-
-## Anti-Patterns
-
-- **Verbose explanations** of things the agent already knows (what a PDF is, how Python imports work)
-- **Multiple tool options** without a clear default ("use pypdf, or pdfplumber, or PyMuPDF...") -- pick one, mention alternatives only for specific edge cases
-- **Time-sensitive info** ("if before August 2025...") -- use a "deprecated" section instead
-- **Vague names** like `helper`, `utils`, `tools` -- be specific: `review-pull-request`, `generate-migration`
-
+> If the skill feels "obvious," it's probably underspecified.
+> Make activation precise, not clever.
