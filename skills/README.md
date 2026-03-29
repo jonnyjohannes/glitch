@@ -6,7 +6,7 @@ tags: [skill, index]
 
 | Skill                     | Description                                                                         |
 | ------------------------- | ----------------------------------------------------------------------------------- |
-| [[note-sharpener]]        | Standardize note frontmatter and tagging across the vault                           |
+| [[doc-tagger]]            | Scan document contents and synthesize 3-5 meaningful tags                           |
 | [[pr-drafter]]            | Draft a PR description from git diff, linked issue, build status, and internal docs |
 | [[pr-responder]]          | Triage and resolve PR review comments — fix, push back, or reply inline             |
 | [[pr-reviewer]]           | Structured GitHub PR review with optional post via MCP or gh CLI                    |
