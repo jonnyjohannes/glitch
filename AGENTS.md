@@ -2,7 +2,7 @@
 tags: [agent]
 ---
 
-# smrtrobot
+# ¯\\(°_o)/¯ smrtrobot
 
 **Agentic orientation/instruction/harness assets**
 Keeping it all Obsidian-sympatico for tags, wikilinks, and graph visualization.
