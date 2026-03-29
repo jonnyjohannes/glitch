@@ -13,7 +13,7 @@ tags: [skill, github, code-review]
 
 # Review GitHub PR
 
-This skill **writes a review, posts the full summary as the PR review body, and adds inline comments on relevant lines**. It does **not** implement code fixes. For **addressing** existing review threads and posting **inline replies** as an author, use [[gh-pr-review-resolver]].
+This skill **writes a review, posts the full summary as the PR review body, and adds inline comments on relevant lines**. It does **not** implement code fixes. For **addressing** existing review threads and posting **inline replies** as an author, use [[pr-responder]].
 
 ## When to post
 
@@ -114,7 +114,7 @@ After the review markdown is complete (and shown to the user in chat), submit **
 - **`body`** — the **entire** markdown review above (unchanged; this is the summary the author sees first).
 - **`comments`** — zero or more **inline** review comments, each with `path`, `line` (in the PR head file), and a short `body`.
 
-Same flow as [[gh-pr-review-resolver]] Phase 4, but inline bodies are **new review feedback**, not replies to existing threads.
+Same flow as [[pr-responder]] Phase 4, but inline bodies are **new review feedback**, not replies to existing threads.
 
 ### Map verdict → GitHub event
 
@@ -167,7 +167,7 @@ If many inline comments were added, one short line near the top of the summary i
 
 ## After the review
 
-If the user wants to **implement** feedback or **reply to existing review threads**, switch to the workflow in [[gh-pr-review-resolver]].
+If the user wants to **implement** feedback or **reply to existing review threads**, switch to the workflow in [[pr-responder]].
 
 ## Fallback: read-only context (no MCP)
 

@@ -42,8 +42,6 @@ tags: [skill, github, authoring]
    Check `state` of the most recent build.
 
    - If `passed`: note this in the PR ("CI: ✓ passing").
-   - If `failed` or `running`: warn the user — offer to investigate with the
-     [[buildkite-failure-investigator]] skill before drafting.
    - If no build found: note "CI not yet triggered".
 
 ## Phase 4: Internal Context (Glean)
