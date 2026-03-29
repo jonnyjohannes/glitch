@@ -17,7 +17,7 @@ tags: [skill, index]
 
 | Skill                     | Description                                                                         |
 | ------------------------- | ----------------------------------------------------------------------------------- |
-| [[doc-tagger]]            | Scan document contents and synthesize 3-5 meaningful tags                           |
+| [[doc-polisher]]          | Format docs via nvim conform and standardize YAML frontmatter metadata             |
 | [[rosetta-stoner]]        | Transliterate and translate classical and sacred texts with line-by-line meanings   |
 | [[tech-spec-transcriber]] | Collaborative design partner that produces implementation-ready tech specs          |
 
