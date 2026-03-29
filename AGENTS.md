@@ -1,5 +1,5 @@
 ---
-tags: [agent]
+tags: [agentic]
 ---
 
 # ¯\\(°_o)/¯ smrtrobot
