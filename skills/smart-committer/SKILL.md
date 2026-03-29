@@ -98,14 +98,6 @@ For each group, in order:
 **Good**: `fix off-by-one in pagination offset`
 **Bad**: `Updated some files and fixed stuff`
 
-### Co-author line
-
-Append to every commit message:
-
-```
-Co-Authored-By: ¯\(°_o)/¯ smrtrobot ({CURRENT AGENT MODEL})
-```
-
 ## Phase 5: Confirm
 
 After all commits land, run `git log --oneline -<n>` (where n = number of commits created)

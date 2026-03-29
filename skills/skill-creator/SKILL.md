@@ -103,7 +103,7 @@ tags: [skill]
 
 ## Step 3: Link into System
 
-Add [[wikilinks]] naturally:
+Add wikilinks naturally:
 
 - Reference related skills
 - Link [[AGENTS]] if persona-aligned
