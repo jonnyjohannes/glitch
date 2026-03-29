@@ -1,15 +1,15 @@
 ---
-name: smart-committer
-aliases: [smart-committer]
+name: git-committer
+aliases: [git-committer, smart-committer]
 description: >-
   Analyze a git diff, group related changes into logical commits, stage each
   group, and commit with concise punchy messages. Use when the user says
-  "smart commit", "group and commit", "chunk commits", "commit these changes
-  smartly", or wants to break a messy working tree into clean atomic commits.
+  "smart commit", "group and commit", "chunk commits", "commit these changes",
+  or wants to break a messy working tree into clean atomic commits.
 tags: [skill, git, workflow]
 ---
 
-# Smart Committer
+# Git Committer
 
 Break a dirty working tree into clean, atomic commits — each with a punchy message.
 
@@ -60,6 +60,7 @@ Commits should be ordered so that each one leaves the tree in a valid state:
 Show the user a table:
 
 ```
+
 commit 1: <message>
   - path/to/file.py (hunks 1-3)
   - path/to/other.py
@@ -67,6 +68,7 @@ commit 1: <message>
 commit 2: <message>
   - path/to/file.py (hunk 4)
   - path/to/test_file.py
+
 ```
 
 Ask: **"look good, or want to shuffle anything?"**
