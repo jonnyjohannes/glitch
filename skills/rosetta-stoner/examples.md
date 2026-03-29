@@ -1,3 +1,7 @@
+---
+tags: [translation, sanskrit]
+---
+
 # Examples
 
 ## Sanskrit Dharani — Eleven-Faced Avalokiteśvara Heart Dharani Sutra

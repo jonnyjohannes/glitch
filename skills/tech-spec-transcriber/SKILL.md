@@ -6,7 +6,7 @@ description: >-
   the design before producing a detailed tech spec markdown file. Use when the
   user wants to write a tech spec, design a system, architect a solution, plan a
   feature, or create a technical design document.
-tags: [skill, authoring]
+tags: [skill, authoring, docs]
 ---
 
 # Write Tech Spec
