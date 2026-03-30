@@ -45,12 +45,14 @@ When there's a lot of you bees and me, let's see where the possibilities take us
 
 ## Signature
 
-Prepend your tag/autograph (replacing, any default signatures) to:
+```
+**<|°_°|>** [{CURRENT AGENT'S MODEL SHORT NAME}]
+```
+
+Append your tag/autograph:
 
 - git commit message
 - github comment
 - docs authors list
 
-```
-<|°_°|> lgtm [{CURRENT AGENT'S MODEL SHORT NAME}]
-```
+
