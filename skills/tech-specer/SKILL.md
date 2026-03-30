@@ -1,66 +1,63 @@
 ---
 name: tech-specer
 description: >-
-  Collaboratively design and write technical specification documents. Acts as an
-  architectural design partner — asking clarifying questions and iterating on
-  the design before producing a detailed tech spec markdown file. Use when the
-  user wants to write a tech spec, design a system, architect a solution, plan a
-  feature, or create a technical design document.
-tools: [Read, Write, Edit, Glob, Grep, Bash]
+  Collaboratively design and write technical specs through conversation, persisting
+  decisions to a spec file and committing often. Use when the user wants to write
+  a tech spec, design a system, architect a solution, plan a feature, or continue
+  working on an existing spec file.
+tools: [Read, Write, Edit, Glob, Grep, Bash, Skill]
 tags: [skill, authoring, docs]
 ---
 
 # Tech Specer
 
-Collaborative design partner that produces implementation-ready tech specs.
+Design partner that thinks through problems in conversation and persists decisions to a living spec file.
 
 ## Interface
 
-**Inputs**: problem description + referenced files, docs, or code
-**Outputs**: tech spec markdown file (implementation-ready)
-**Side effects**: writes spec file to disk, commits via [[git-committer]]
+**Inputs**: problem description + referenced files/docs/code, or an existing spec file to continue
+**Outputs**: tech spec markdown file (`docs/specs/<name>.md` or `<name>-spec.md`)
+**Side effects**: creates/edits spec file, commits via [[git-committer]]
 
 ## Conventions
 
+### the file is the source of truth
+
+create the spec file early — even if it's mostly scaffold and TODOs. as the conversation produces decisions, update the file to reflect them. the file should always represent the current state of the design, clean and readable. conversation is ephemeral; the file persists.
+
+### commit often
+
+invoke [[git-committer]] whenever the file reaches a meaningful state — after scaffolding, after a section solidifies, after resolving TODOs. don't let decisions pile up uncommitted.
+
+### resumable
+
+the user may invoke this skill with an existing spec file. read it, orient to where things stand, check for `TODO` markers, and continue. the file *is* the session state.
+
 ### TODO resolution
 
-when the user leaves `TODO` notes in a spec (or references them in conversation), attempt to resolve each one autonomously — read surrounding context, check the codebase, fill in the blanks.
-
-if a TODO requires input you can't infer, break to an interactive session using [[AGENTS]] structured feedback: present 2-3 concrete alternatives + "other)" and cycle until you have enough context to resolve it.
-
-### commit after updates
-
-after making substantive changes to a spec, invoke [[git-committer]] to stage and commit the updates. don't let edits pile up uncommitted.
+when encountering `TODO` markers (left by you or the user), resolve autonomously where possible. for anything needing input, use [[AGENTS]] structured feedback — present 2-3 alternatives + "other)" and cycle.
 
 ## Workflow
 
-### Phase 1: Understand the Problem
+### Phase 1: Orient
 
-read any files, docs, or code the user references to build context.
+**New spec**: understand the problem space. read referenced files, docs, or code. ask clarifying questions in a single message covering gaps in problem, scope, constraints, and success criteria. adapt depth to problem size.
 
-ask clarifying questions **in a single message** covering gaps in:
+**Resuming**: read the existing spec. summarize current state and open items. ask the user what to focus on.
 
-- **Problem**: what's broken, missing, or needed? who is affected?
-- **Scope**: what's in and out of scope? adjacent systems?
-- **Constraints**: performance, compatibility, timeline, tech stack?
-- **Success criteria**: how do we know it works?
+### Phase 2: Create the File
 
-adapt depth to problem size. small feature = 1-2 quick questions. new system = thorough discovery. if the user's description already covers these, skip ahead.
+ask where to save (suggest `docs/specs/<name>.md`). scaffold using the output format below — fill in what you know, mark unknowns with `TODO`. commit the scaffold.
 
-### Phase 2: Frame and Propose
+skip when resuming.
 
-once you understand the problem, propose a **solution framing**:
+### Phase 3: Design Conversationally
 
-1. restate the problem (1-2 sentences)
-2. list explicit **goals** and **non-goals**
-3. sketch 1-2 high-level approaches with trade-offs
-4. recommend one approach with rationale
+think through the problem together. ask questions, propose approaches, debate trade-offs — use [[AGENTS]] structured feedback for non-trivial choices. this is collaborative conversation, not a rigid section-by-section march.
 
-wait for user feedback. revise until aligned.
+as decisions crystallize, update the spec file to capture them. commit at natural milestones.
 
-### Phase 3: Design Iteratively
-
-dive into the technical design of the agreed approach. work through these areas as relevant:
+areas to cover as relevant:
 
 - architecture and component boundaries
 - data models and state management
@@ -68,22 +65,14 @@ dive into the technical design of the agreed approach. work through these areas 
 - key algorithms or business logic
 - error handling and edge cases
 - migration or rollout strategy
+- implementation plan (ordered, independently verifiable steps)
+- testing strategy
 
-present each area conversationally. ask the user for input on decisions that depend on team preference, existing conventions, or product trade-offs. make opinionated recommendations where technical best practice is clear.
+only cover what matters for the problem at hand.
 
-### Phase 4: Write the Spec
+### Phase 4: Finalize
 
-when the design is stable, ask where to save it (suggest `docs/specs/<name>.md` or `<name>-spec.md`).
-
-write using the output format below — tailor sections to the problem, omit what doesn't apply.
-
-after writing, present a summary and ask if the user wants to revise any section.
-
-### Phase 5: Revise
-
-iterate on the spec based on user feedback. make targeted edits rather than rewriting the whole document. when the user is satisfied, confirm the spec is final.
-
-invoke [[git-committer]] to commit the final spec.
+scan for remaining `TODO` markers — resolve or surface as choices. do a consistency pass. commit the final state and show the commit log.
 
 ## Output Format
 
@@ -97,7 +86,7 @@ invoke [[git-committer]] to commit the final spec.
 
 ## Problem Statement
 
-[What problem are we solving? Who is affected? What's the current state?]
+[What problem are we solving? Who is affected?]
 
 ## Goals
 
@@ -119,7 +108,7 @@ invoke [[git-committer]] to commit the final spec.
 
 ### Detailed Design
 
-[Break into subsections. Cover technical design at implementation-ready detail.]
+[Break into subsections at implementation-ready detail.]
 
 #### [Component / Area 1]
 
@@ -133,7 +122,6 @@ invoke [[git-committer]] to commit the final spec.
 ## Testing Strategy
 
 - [How to verify each component works]
-- [Key integration or end-to-end tests]
 - [Edge cases to cover]
 
 ## Open Questions
@@ -144,8 +132,8 @@ invoke [[git-committer]] to commit the final spec.
 
 ## Guidelines
 
-- **Be specific enough to implement from.** Include interface signatures, field names, error codes — whatever removes ambiguity.
-- **Scope the implementation plan.** Each step should be independently verifiable. An implementing agent should be able to pick up one step and complete it.
-- **Separate concerns.** The spec should stand alone without needing chat history.
-- **Preserve user decisions.** When the user makes an explicit design choice, reflect it faithfully.
-- **Use the codebase.** Read existing code to match naming conventions, patterns, and architecture.
+- **Conversation drives the design, the file captures decisions.** talk freely, update the file when things land.
+- **Be specific enough to implement from.** include interface signatures, field names, error codes — whatever removes ambiguity.
+- **Scope the implementation plan.** each step should be independently verifiable.
+- **Preserve user decisions.** when the user makes an explicit design choice, reflect it faithfully.
+- **Use the codebase.** read existing code to match naming conventions, patterns, and architecture.
