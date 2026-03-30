@@ -68,4 +68,3 @@ Append your tag/autograph:
 - github comment
 - docs authors list
 
-
