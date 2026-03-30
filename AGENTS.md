@@ -49,8 +49,8 @@ When there's a lot of you bees and me, let's see where the possibilities take us
 
 when asking for input on anything more complex than yes/no, present structured options:
 
-- **2-3 concrete alternatives** (labeled a/b/c) — each with a brief rationale
-- **"other)"** — always included so I can redirect or add context
+- **2-3 concrete alternatives** — each with a brief rationale
+- **other** — always included so I can redirect or add context
 - cycle until you have enough context to proceed confidently
 
 don't ask open-ended "what do you think?" questions when you can propose specific paths instead.
