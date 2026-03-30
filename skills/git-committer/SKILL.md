@@ -51,8 +51,7 @@ Analyze every hunk across all changed files. Group by **logical concern**, not b
 ### Splitting within a file
 
 When a single file contains changes belonging to different groups, use
-`git add -p` (via `git add --patch`) or stage specific hunks. Present the
-grouping plan to the user before staging anything.
+`git add -p` (via `git add --patch`) or stage specific hunks.
 
 ### Ordering
 
@@ -64,27 +63,9 @@ Commits should be ordered so that each one leaves the tree in a valid state:
 4. Tests
 5. Docs / cleanup last
 
-## Phase 3: Present the Plan
+## Phase 3: Stage and Commit
 
-Show the user a table:
-
-```
-
-commit 1: <message>
-  - path/to/file.py (hunks 1-3)
-  - path/to/other.py
-
-commit 2: <message>
-  - path/to/file.py (hunk 4)
-  - path/to/test_file.py
-
-```
-
-Ask: **"look good, or want to shuffle anything?"**
-
-Do **not** stage or commit until the user confirms.
-
-## Phase 4: Stage and Commit
+No approval gate — just execute. Git history is the safety net.
 
 For each group, in order:
 
@@ -109,7 +90,7 @@ For each group, in order:
 **Good**: `fix off-by-one in pagination offset`
 **Bad**: `Updated some files and fixed stuff`
 
-## Phase 5: Confirm
+## Phase 4: Confirm
 
 After all commits land, run `git log --oneline -<n>` (where n = number of commits created)
 and show the user the result.
@@ -118,10 +99,8 @@ and show the user the result.
 
 - **Never force-push or rewrite history** — only create new commits.
 - **Never commit secrets** — skip `.env`, credentials, tokens. Warn if detected.
-- **Preserve existing staging** — if the user had changes already staged, ask
-  whether to include them in the grouping or leave them as-is.
-- **Ask before acting** — always show the plan first unless the user explicitly
-  said "just commit it" or "yolo."
+- **Preserve existing staging** — if the user had changes already staged,
+  include them in the grouping.
 - **One concern per commit** — if in doubt, split further rather than lumping.
 - **Leave the tree clean** — after all commits, `git status` should show nothing
   (or only intentionally untracked files).
