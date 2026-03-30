@@ -12,6 +12,7 @@ tags: [skill, index]
 | [[pr-drafter]]            | Draft a PR description from git diff, linked issue, build status, and docs        |
 | [[pr-responder]]          | Triage and resolve PR review comments — fix, push back, or reply inline           |
 | [[pr-reviewer]]           | Structured GitHub PR review with optional post via MCP or gh CLI                  |
+| [[readme-updater]]        | Scan repo and update README with setup, install, usage, examples, agentic assets  |
 | [[rosetta-stoner]]        | Transliterate and translate classical and sacred texts with line-by-line meanings |
 | [[skill-creator]]         | Create new agent skills in this library                                           |
 | [[skill-sharpener]]       | Refine existing skills by reconciling edits into clean SKILL.md                   |
