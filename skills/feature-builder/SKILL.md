@@ -16,7 +16,7 @@ Turn a plan into working code — with human review before implementation.
 
 ## Interface
 
-**Inputs**: implementation plan (inline, file path, [[tech-spec-transcriber]] output, or any structured description)
+**Inputs**: implementation plan (inline, file path, [[tech-specer]] output, or any structured description)
 **Outputs**: working code implementing the plan
 **Side effects**: file writes, git commits (via [[git-committer]])
 
@@ -33,7 +33,7 @@ Accept the plan from wherever it lives:
 
 - **File path** — read it (`docs/specs/foo.md`, `foo-spec.md`, etc.)
 - **Inline** — user pastes or describes it in conversation
-- **Reference** — user names a spec written by [[tech-spec-transcriber]] or similar
+- **Reference** — user names a spec written by [[tech-specer]] or similar
 - **Structured doc** — any markdown with goals, steps, or requirements
 
 Extract from the plan:

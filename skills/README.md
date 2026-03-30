@@ -16,4 +16,4 @@ tags: [skill, index]
 | [[rosetta-stoner]]        | Transliterate and translate classical and sacred texts with line-by-line meanings |
 | [[skill-creator]]         | Create new agent skills in this library                                           |
 | [[skill-sharpener]]       | Refine existing skills by reconciling edits into clean SKILL.md                   |
-| [[tech-spec-transcriber]] | Collaborative design partner that produces implementation-ready tech specs        |
+| [[tech-specer]]           | Collaborative design partner that produces implementation-ready tech specs        |
