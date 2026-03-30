@@ -72,7 +72,25 @@ only cover what matters for the problem at hand.
 
 ### Phase 4: Finalize
 
-scan for remaining `TODO` markers — resolve or surface as choices. do a consistency pass. commit the final state and show the commit log.
+scan for remaining `TODO` markers — resolve or surface as choices. do a consistency pass. commit the final state.
+
+### Phase 5: Implementability Check
+
+the spec's consumer is an implementing agent (e.g. [[feature-builder]]). before calling it done, run this gate to verify the spec gives that agent enough signal to proceed without guessing.
+
+**checklist** — evaluate each dimension, flag gaps:
+
+- [ ] **no unresolved TODOs** — every `TODO` marker is resolved or explicitly deferred to open questions
+- [ ] **interfaces defined** — API contracts, function signatures, data models have field names and types, not just prose descriptions
+- [ ] **implementation steps are atomic** — each step in the implementation plan has a clear deliverable an agent can verify completion against
+- [ ] **dependencies explicit** — external services, libraries, existing code paths the implementation touches are named and located
+- [ ] **edge cases enumerated** — error states, boundary conditions, and failure modes are listed, not left implicit
+- [ ] **testability** — each component has at least one concrete assertion or verification method described
+
+**verdict**:
+
+- **ready** — all checks pass. show the commit log and tell the user the spec is implementable.
+- **not ready** — list the gaps. cycle back to Phase 3 to resolve them with the user, then re-run this check.
 
 ## Output Format
 
@@ -133,7 +151,7 @@ scan for remaining `TODO` markers — resolve or surface as choices. do a consis
 ## Guidelines
 
 - **Conversation drives the design, the file captures decisions.** talk freely, update the file when things land.
-- **Be specific enough to implement from.** include interface signatures, field names, error codes — whatever removes ambiguity.
+- **Be specific enough to implement from.** include interface signatures, field names, error codes — whatever removes ambiguity. Phase 5 will catch you if you don't.
 - **Scope the implementation plan.** each step should be independently verifiable.
 - **Preserve user decisions.** when the user makes an explicit design choice, reflect it faithfully.
 - **Use the codebase.** read existing code to match naming conventions, patterns, and architecture.
