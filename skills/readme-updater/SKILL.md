@@ -1,6 +1,5 @@
 ---
 name: readme-updater
-aliases: [readme-updater]
 description: >-
   Scan a repo's structure, code, and agentic assets, then generate or update its
   README with setup, install, usage, examples, and references. Use when the user

@@ -1,6 +1,5 @@
 ---
 name: git-committer
-aliases: [git-committer, smart-committer]
 description: >-
   Analyze a git diff, group related changes into logical commits, stage each
   group, and commit with concise punchy messages. Use when the user says

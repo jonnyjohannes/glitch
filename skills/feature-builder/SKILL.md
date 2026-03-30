@@ -1,6 +1,5 @@
 ---
 name: feature-builder
-aliases: [feature-builder]
 description: >-
   Implement a feature from a plan or spec — review the approach with the user,
   cycle on feedback, then code it up and commit via git-committer. Use when the

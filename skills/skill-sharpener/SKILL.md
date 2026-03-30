@@ -78,7 +78,7 @@ Summarize what changed and why (infer intent from the diff context). Present thi
 Produce an updated SKILL.md that:
 
 1. **Preserves the user's edits** — the manual changes are the source of truth for _what_ the skill should do.
-2. **Conforms to [[skill-creator]] template** — proper frontmatter (`name`, `aliases`, `description`, `tags: [skill]`), concise body, wikilinks where natural, under 300 lines.
+2. **Conforms to [[skill-creator]] template** — proper frontmatter, concise body, wikilinks where natural, under 300 lines.
 3. **Fixes template drift** — if the manual edit broke structure (missing frontmatter field, inconsistent terminology, verbose explanations), fix it while keeping the user's intent.
 4. **Maintains wikilinks** — ensure `[[references]]` to other skills and `[[AGENTS]]` are present where appropriate.
 
@@ -111,7 +111,6 @@ Also update root `README.md` if it exists and has a skills table.
 Run the [[skill-creator]] verification checklist:
 
 - [ ] `name` field: lowercase, hyphens only, max 64 chars
-- [ ] `aliases: [<skill-name>]` matches `name`
 - [ ] `description`: third person, includes what + when, has trigger terms
 - [ ] `tools`: lists required tools (Bash, Read, Edit, mcp\_\_\*, etc.)
 - [ ] `tags: [skill, ...]` includes `skill` + at least one domain tag

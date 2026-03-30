@@ -65,7 +65,6 @@ If unclear, ask — don't guess.
 ```yaml
 ---
 name: your-skill-name
-aliases: [your-skill-name]
 description: >-
   What it does and when to use it. Include trigger language.
 tools: [Read, Edit, Bash] # tools this skill needs
@@ -153,11 +152,10 @@ Add to:
 ### Verify
 
 - [ ] Correct directory
-- [ ] Valid frontmatter (name, aliases, description, tools, tags)
+- [ ] Valid frontmatter (name, description, tools, tags)
 - [ ] `tools` field lists required tools
 - [ ] `tags` include `skill` + at least one domain tag
 - [ ] Description includes what + when
-- [ ] Aliases match name
 - [ ] `## Interface` section present (inputs, outputs, side effects)
 - [ ] Cross-links to composable skills where natural
 - [ ] Under 300 lines

@@ -1,6 +1,5 @@
 ---
 name: doc-polisher
-aliases: [doc-polisher, doc-tagger]
 description: >-
   Format documents via nvim conform and update YAML frontmatter metadata (tags,
   etc.). Use when the user says "polish docs", "format notes", "tag this",

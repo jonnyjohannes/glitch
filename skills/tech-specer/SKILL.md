@@ -1,6 +1,5 @@
 ---
 name: tech-specer
-aliases: [tech-specer, tech-spec-transcriber]
 description: >-
   Collaboratively design and write technical specification documents. Acts as an
   architectural design partner — asking clarifying questions and iterating on
