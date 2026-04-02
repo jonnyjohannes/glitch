@@ -41,9 +41,10 @@ This process aligns all three.
 
 - [ ] Step 1: Detect Changes
 - [ ] Step 2: Understand Intent
-- [ ] Step 3: Rewrite SKILL.md
-- [ ] Step 4: Reconcile Ecosystem
-- [ ] Step 5: Verify Integrity
+- [ ] Step 3: Best Practices Check
+- [ ] Step 4: Rewrite SKILL.md
+- [ ] Step 5: Reconcile Ecosystem
+- [ ] Step 6: Verify Integrity
 
 ## Step 1: Detect Changes
 
@@ -128,14 +129,3 @@ Run the [[skill-creator]] verification checklist:
 
 This skill is the **default entry point** for all skill work.
 
-## Failure Modes
-
-- Treating diffs as exact instructions
-- Preserving broken structure out of deference
-- Ignoring [[skill-creator]] constraints
-- Overfitting to template at the expense of clarity
-
-## Heuristic
-
-> Don't edit the file.
-> Re-author it using the edits as clues.
