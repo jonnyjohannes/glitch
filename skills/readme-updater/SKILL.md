@@ -82,7 +82,7 @@ Include sections **only when the repo has relevant content**. Skip empty section
 
 ### Agentic assets section
 
-This is the glitch-specific bit. When the repo contains agentic assets:
+When the repo contains agentic assets:
 
 ```markdown
 
@@ -108,7 +108,7 @@ Link with wikilinks where obsidian-sympatico. Include skills table if `skills/RE
 Guidelines:
 
 - Match repo's existing tone (formal project = formal readme, casual = casual)
-- For glitch repos, use the casual tone from [[AGENTS]]
+- If `AGENTS.md` defines a tone, match it
 - Keep it scannable — headers, bullets, short paragraphs
 - Code blocks for all commands and examples
 - No placeholder text ("TODO", "coming soon") — if you don't know it, skip it
