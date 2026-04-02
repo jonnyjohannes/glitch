@@ -35,27 +35,29 @@ The README is a **living map** — it should be derivable from current repo stat
 
 Gather signals from the repo to inform each section:
 
-| Signal | Source |
-|---|---|
+| Signal               | Source                                                                                      |
+| -------------------- | ------------------------------------------------------------------------------------------- |
 | Language / framework | file extensions, `package.json`, `Cargo.toml`, `pyproject.toml`, `go.mod`, `Makefile`, etc. |
-| Install / setup | dependency files, `Dockerfile`, `docker-compose.yml`, `.env.example`, setup scripts |
-| Entry points / usage | `main.*`, `cli.*`, `bin/`, scripts in `package.json`, `Makefile` targets |
-| Examples | `examples/`, `demo/`, inline doc comments, test files with clear usage patterns |
-| Agentic assets | `AGENTS.md`, `CLAUDE.md`, `skills/`, `.claude/`, MCP configs, hooks |
-| CI / tooling | `.github/`, `.buildkite/`, linting configs, formatter configs |
-| Existing docs | `docs/`, `wiki/`, `CONTRIBUTING.md`, `LICENSE`, `CHANGELOG.md` |
+| Install / setup      | dependency files, `Dockerfile`, `docker-compose.yml`, `.env.example`, setup scripts         |
+| Entry points / usage | `main.*`, `cli.*`, `bin/`, scripts in `package.json`, `Makefile` targets                    |
+| Examples             | `examples/`, `demo/`, inline doc comments, test files with clear usage patterns             |
+| Agentic assets       | `AGENTS.md`, `CLAUDE.md`, `skills/`, `.claude/`, MCP configs, hooks                         |
+| CI / tooling         | `.github/`, `.buildkite/`, linting configs, formatter configs                               |
+| Existing docs        | `docs/`, `wiki/`, `CONTRIBUTING.md`, `LICENSE`, `CHANGELOG.md`                              |
 
 Use `Glob` and `Read` to sweep — don't overthink it, just gather what's there.
 
 ## Step 2: Detect Existing README
 
 **README exists?** →
+
 - Read it fully
 - Preserve user-written prose, badges, and custom sections
 - Update factual/structural sections in place
 - Add missing sections
 
 **No README?** →
+
 - Generate from scratch using template below
 
 ## Step 3: Assemble Sections
@@ -80,17 +82,18 @@ Include sections **only when the repo has relevant content**. Skip empty section
 
 ### Agentic assets section
 
-This is the smrtrobot-specific bit. When the repo contains agentic assets:
+This is the glitch-specific bit. When the repo contains agentic assets:
 
 ```markdown
 
 ## Agentic Assets
 
-| Asset | Description |
-|---|---|
-| [[AGENTS.md]] | ... |
-| [[skills/README]] | ... |
-| `.claude/` | ... |
+
+| Asset             | Description |
+| ----------------- | ----------- |
+| [[AGENTS.md]]     | ...         |
+| [[skills/README]] | ...         |
+| `.claude/`        | ...         |
 
 ```
 
@@ -103,8 +106,9 @@ Link with wikilinks where obsidian-sympatico. Include skills table if `skills/RE
 **Creating?** → Use `Write` with the assembled content.
 
 Guidelines:
+
 - Match repo's existing tone (formal project = formal readme, casual = casual)
-- For smrtrobot repos, use the casual tone from [[AGENTS]]
+- For glitch repos, use the casual tone from [[AGENTS]]
 - Keep it scannable — headers, bullets, short paragraphs
 - Code blocks for all commands and examples
 - No placeholder text ("TODO", "coming soon") — if you don't know it, skip it
