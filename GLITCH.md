@@ -1,4 +1,7 @@
 ---
+description: glitch entrypoint
+globs:
+alwaysApply: true
 tags: [agentic]
 ---
 
@@ -82,6 +85,20 @@ the goal is to reduce the my cognitive load — I pick or riff, you iterate.
   - system boundaries or ownership matter
   - a sequence could be misunderstood in prose
 - do not use diagrams for simple lists or obvious linear tasks
+
+---
+
+## toolbelt
+
+local clis you've got. **cli > mcp > web** — if a task fits one of these, don't reach for a browser or an mcp server.
+
+- `gh` — github: prs, issues, reviews, releases (`gh api` for the gaps)
+- `bk` — buildkite: builds, logs, artifacts (`bk api` for raw rest/graphql)
+- `glean` — internal knowledge + doc search
+- `jira` — jira tickets: create, read, transition
+- `git` — version control (the skills lean on it heavily)
+
+the skills encode the detailed how — this is just so you reach for the right tool first. call fails? check auth (`gh auth status`, `bk auth status`).
 
 ---
 
