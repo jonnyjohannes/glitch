@@ -1,13 +1,13 @@
 ---
 name: pr-responder
 description: >-
-  Pulls GitHub PR review comments via MCP (or gh CLI fallback), evaluates each
+  Pulls GitHub PR review comments via the gh CLI, evaluates each
   against actual codebase behavior, test coverage, and architectural context before
   touching any code, then implements valid fixes in priority order and posts specific
   inline reply comments for each resolved or pushed-back item. Use when the user asks
   to address, fix, or resolve PR review comments, or when given a PR URL/number and
   asked to handle reviewer feedback. Never changes business logic.
-tools: [Read, Edit, Bash, mcp__github__*]
+tools: [Read, Edit, Bash]
 tags: [skill, github, code-review]
 ---
 
@@ -17,18 +17,19 @@ tags: [skill, github, code-review]
 
 **Inputs**: PR with unresolved review comments (from [[pr-reviewer]] or human reviewers)
 **Outputs**: code fixes + inline reply comments on each resolved thread
-**Side effects**: commits and pushes to branch, posts GitHub review replies via MCP
+**Side effects**: commits and pushes to branch, posts GitHub review replies via `gh` CLI
 
 ## Phase 1: Context Gathering
 
 1. **Identify the PR** — run `git branch --show-current` and `git remote -v`.
-   Use `pull_request_read` (method: `get`) to confirm the open PR on the current
-   branch. If none found, ask the user for the PR number and repo.
+   Use `gh pr view --json number,headRefName,headRefOid` to confirm the open PR on the
+   current branch. If none found, ask the user for the PR number and repo.
 
-2. **Fetch all review threads** — `pull_request_read` (method: `get_review_comments`).
-   Paginate until all threads are retrieved. Skip any thread where `isResolved: true`.
+2. **Fetch all review threads** — `gh pr view <number> --json reviewThreads` (or
+   `gh api repos/{owner}/{repo}/pulls/<number>/comments` for the raw list, paginated).
+   Skip any thread already resolved.
 
-3. **Fetch diff** — `pull_request_read` (method: `get_diff`) for full context.
+3. **Fetch diff** — `gh pr diff <number>` for full context.
 
 4. **Read affected files** — read the current on-disk state of every file referenced
    in unresolved threads. Never rely on the diff alone; the file may have changed.
@@ -77,14 +78,13 @@ For each Implement item:
 ## Phase 4: Push and Reply
 
 1. Commit with a descriptive message referencing the review (e.g.
-   `address PR review: <short summary>`). Push to the current branch.
-   Prefer `git commit && git push` over the `push_files` MCP tool.
+   `address PR review: <short summary>`). Push to the current branch with
+   `git commit && git push`.
 
-2. For each resolved thread, post an inline reply:
-   - `pull_request_review_write` (method: `create`, no `event` → pending review)
-   - `add_comment_to_pending_review` at the same `path` + `line` as the original comment
-   - Repeat for all threads, then `pull_request_review_write` (method: `submit_pending`,
-     event: `COMMENT`)
+2. For each resolved thread, post an inline reply anchored to the original comment:
+   - Per thread: `gh api --method POST repos/{owner}/{repo}/pulls/<number>/comments/<comment_id>/replies -f body="..."`
+   - Or batch all replies into one review: `gh api --method POST repos/{owner}/{repo}/pulls/<number>/reviews --input payload.json`
+     (`event: COMMENT`, with `comments[]` at the same `path` + `line` as each original comment).
 
 3. **Reply format — describe what changed, not feelings:**
 
@@ -110,13 +110,12 @@ For each Implement item:
    Implemented per clarification: <what was done>.
    ```
 
-## Fallback (no MCP GitHub tools)
-
-Use `gh` CLI instead:
+## Quick reference (gh)
 
 ```bash
-gh pr view <number> --json reviewThreads,headRefName
-gh pr comment <number> --body "..."
+gh pr view <number> --json reviewThreads,headRefName,headRefOid
+gh api repos/{owner}/{repo}/pulls/<number>/comments            # raw review comments
+gh pr comment <number> --body "..."                            # general (non-inline) comment
 ```
 
 Commit and push normally with git.
@@ -124,8 +123,7 @@ Commit and push normally with git.
 ## Notes
 
 - Derive `owner` and `repo` from `git remote get-url origin` (strip `.git` suffix).
-- If the GitHub MCP server requires authentication, check for an `mcp_auth` tool and
-  call it first.
+- Ensure `gh auth status` is authenticated before fetching threads or posting replies.
 - When multiple fixes touch the same file, batch all edits before running lint/tests
   once per file, not per comment.
 - Conflicts between two reviewer suggestions targeting the same code: surface both to

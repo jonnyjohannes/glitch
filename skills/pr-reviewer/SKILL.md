@@ -4,11 +4,11 @@ description: >-
   Reviews GitHub pull requests with structured, actionable feedback prioritizing
   correctness, simplicity, readability, maintainability, and team-appropriate best
   practices, then posts a full summary review on the PR plus inline comments on
-  specific lines where feedback maps cleanly to a location, via GitHub MCP or gh
-  CLI unless the user asked for a local/draft-only review. Use when the user asks
+  specific lines where feedback maps cleanly to a location, via the gh CLI unless
+  the user asked for a local/draft-only review. Use when the user asks
   for a PR review, code review before merge, feedback on a pull request, or to
   post review comments to a GitHub PR by URL or number.
-tools: [Read, Bash, mcp__github__*]
+tools: [Read, Bash]
 tags: [skill, github, code-review]
 ---
 
@@ -18,7 +18,7 @@ tags: [skill, github, code-review]
 
 **Inputs**: PR number/URL, or current branch with an open PR
 **Outputs**: structured review markdown (verdict + summary + inline comments)
-**Side effects**: posts GitHub review with inline comments via MCP or `gh api`
+**Side effects**: posts GitHub review with inline comments via `gh api`
 
 This skill **writes a review, posts the full summary as the PR review body, and adds inline comments on relevant lines**. It does **not** implement code fixes. For **addressing** existing review threads and posting **inline replies** as an author, use [[pr-responder]].
 
@@ -26,9 +26,9 @@ This skill **writes a review, posts the full summary as the PR review body, and 
 
 - **Post** the composed review to GitHub when the user wants feedback on the PR and did **not** ask for draft-only, local-only, or “don’t post.”
 - **Do not post** if the user asked only to preview, draft, or discuss privately — share the markdown in chat only.
-- If authentication fails, show the review in chat and give the `gh` fallback commands.
+- If authentication fails (`gh auth status`), show the review in chat and give the `gh` commands to post manually.
 
-Derive `owner` and `repo` from `git remote get-url origin` (strip `.git`). If the GitHub MCP server requires authentication, check for an `mcp_auth` tool and use it first.
+Derive `owner` and `repo` from `git remote get-url origin` (strip `.git`). Ensure `gh auth status` is authenticated before posting.
 
 ## Principles
 
@@ -42,12 +42,12 @@ Derive `owner` and `repo` from `git remote get-url origin` (strip `.git`). If th
 
 Mirror the resolver’s opening steps so reviews are grounded in the same facts:
 
-1. **Identify the PR** — `git branch --show-current`, `git remote -v`. Prefer GitHub MCP `pull_request_read` (method: `get`) for the open PR on the current branch; if none, ask for PR number and repo (or URL).
-2. **Fetch the diff** — `pull_request_read` (method: `get_diff`) for full change context.
+1. **Identify the PR** — `git branch --show-current`, `git remote -v`. Use `gh pr view --json number,title,headRefOid` for the open PR on the current branch; if none, ask for PR number and repo (or URL).
+2. **Fetch the diff** — `gh pr diff <number>` for full change context.
 3. **Read on-disk files** — for each file touched or heavily implied by the diff, read the current workspace version. Do not rely on the diff alone for final line numbers or surrounding behavior.
 4. **Tests and config** — if the PR changes behavior or public APIs, read or skim related tests and any config/env docs the diff references.
 
-If review comments already exist on the PR, optionally fetch them (`get_review_comments`) to avoid duplicating points unless adding new evidence or severity.
+If review comments already exist on the PR, optionally fetch them (`gh api repos/{owner}/{repo}/pulls/<number>/comments`) to avoid duplicating points unless adding new evidence or severity.
 
 ## What to evaluate
 
@@ -141,36 +141,24 @@ Same flow as [[pr-responder]] Phase 4, but inline bodies are **new review feedba
 
 Use **`COMMENT`** instead when the user asked for non-binding feedback, when org policy treats all bot/agent output as comment-only, or when unsure whether approval should count — the full structured body still attaches to the review.
 
-### MCP (preferred)
+### Post via `gh api`
 
-Use the **pending review** pattern so inline comments and the summary ship together:
-
-1. **`pull_request_review_write`** (method: `create`, **no** `event` / pending) — `owner`, `repo`, `pull_number`, and `commit_id` if required (use the PR’s **head** SHA from `pull_request_read` `get`).
-2. For **each** inline item: **`add_comment_to_pending_review`** with the same `path` and `line` as the code under review (resolver-style). Use the API’s `side` / multi-line fields only when the tool exposes them and the comment targets a specific diff side.
-3. **`pull_request_review_write`** (method: `submit_pending`, **`body`** = full summary markdown, **`event`** per the table above).
-
-If the MCP supports submitting **one** call with both `body` and an array of line comments, that is equivalent — prefer whichever is documented for that server.
-
-**Commit SHA:** inline comments apply to the **latest head commit** of the PR; refresh from `pull_request_read` if the branch may have moved.
-
-### gh CLI fallback
-
-`gh pr review` alone cannot attach multiple line comments in one review. Use **`gh api`** to POST [`/repos/{owner}/{repo}/pulls/{pull_number}/reviews`](https://docs.github.com/en/rest/pulls/reviews#create-a-review-for-a-pull-request) with JSON:
+`gh pr review` alone cannot attach multiple line comments in one review, so ship the summary **and** the inline comments together with a single **`gh api`** POST to [`/repos/{owner}/{repo}/pulls/{pull_number}/reviews`](https://docs.github.com/en/rest/pulls/reviews#create-a-review-for-a-pull-request):
 
 - `commit_id` — PR head OID, e.g. `gh pr view <number> --json headRefOid -q .headRefOid`
 - `body` — full summary markdown (same as chat)
 - `event` — `APPROVE`, `REQUEST_CHANGES`, or `COMMENT` (uppercase)
 - `comments` — array of `{ "path": "...", "line": <number>, "body": "..." }` for each inline note
 
-Example (write `review-payload.json` then post):
+Example (build `review-payload.json` then post):
 
 ```bash
 COMMIT=$(gh pr view <number> --json headRefOid -q .headRefOid)
-# edit review-payload.json: commit_id, body, event, comments[]
+# build review-payload.json: { "commit_id": "<COMMIT>", "body": "...", "event": "...", "comments": [ ... ] }
 gh api --method POST repos/{owner}/{repo}/pulls/<number>/reviews --input review-payload.json
 ```
 
-If inline JSON is too awkward, post the **summary** only with `gh pr review … --body-file` and tell the user inline comments need MCP or a scripted `gh api` call.
+**Commit SHA:** inline comments apply to the **latest head commit** of the PR; refresh `headRefOid` if the branch may have moved. If the inline JSON is too awkward, post the **summary** only with `gh pr review <number> --body-file <file>` and tell the user inline comments need the scripted `gh api` call.
 
 ### After posting
 
@@ -184,7 +172,7 @@ If many inline comments were added, one short line near the top of the summary i
 
 If the user wants to **implement** feedback or **reply to existing review threads**, switch to the workflow in [[pr-responder]].
 
-## Fallback: read-only context (no MCP)
+## Read-only context (no posting)
 
 ```bash
 gh pr view <number> --web   # or --json title,body,files

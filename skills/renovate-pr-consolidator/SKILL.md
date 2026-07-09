@@ -5,12 +5,12 @@
 1. **Identify the repo** — run `git remote get-url origin`. Extract `owner`
    and `repo`.
 
-2. **List open Renovate PRs** — `search_pull_requests` with
-   `author:app/applife-renovate-app state:open` scoped to the repo.
-   Collect every PR's `number`, `title`, `head.ref`, and `html_url`.
+2. **List open Renovate PRs** — `gh pr list --author "app/applife-renovate-app"
+   --state open --json number,title,headRefName,url`.
+   Collect every PR's `number`, `title`, `headRefName`, and `url`.
 
-3. **Fetch changed files for each PR** — `pull_request_read`
-   (method: `get_files`) on each PR. Record which dependency files are
+3. **Fetch changed files for each PR** — `gh pr view <number> --json files` (or
+   `gh pr diff <number>`) on each PR. Record which dependency files are
    touched and what version changes are proposed. Typical patterns:
 
     | Ecosystem | Dependency files | Lock files |
@@ -143,14 +143,13 @@
 
     ```bash
     git push -u origin chore/consolidate-renovate-upgrades
+    gh pr create --title "chore: consolidate Renovate dependency upgrades" \
+      --body-file <path-to-body>
     ```
 
-    Then `create_pull_request` with:
-    - **title:** `chore: consolidate Renovate dependency upgrades`
-    - **body:** use the repo's PR template; list every included upgrade
-      with PR number and version change; note test results and any
-      breaking changes
-    - **draft:** false
+    Build the body from the repo's PR template; list every included upgrade
+    with PR number and version change; note test results and any breaking
+    changes. Create it ready for review (omit `--draft`).
 
 17. **Offer to close the individual Renovate PRs:**
 
@@ -158,8 +157,7 @@
     linking to the consolidated PR?"**
 
     If confirmed, for each included PR:
-    - `add_issue_comment` linking to the new PR
-    - `update_pull_request` with `state: "closed"`
+    `gh pr close <number> --comment "Consolidated into #<new_pr>"`
 
 ## Rules
 
@@ -175,14 +173,3 @@
 - Create the PR as ready for review (not draft).
 - Preserve the Renovate PR numbers in the commit message and PR body so
   the audit trail is clear.
-
-## Fallback (no MCP GitHub tools)
-
-Use the `gh` CLI:
-
-```bash
-gh pr list --author "app/applife-renovate-app" --state open --json number,title,headRefName
-gh pr view <number> --json files
-gh pr create --title "..." --body "..." --draft
-gh pr close <number> --comment "Consolidated into #<new_pr>"
-```

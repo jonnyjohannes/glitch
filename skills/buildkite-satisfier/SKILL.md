@@ -1,28 +1,36 @@
 # Buildkite Failure Investigator
 
+Uses the `bk` CLI (`bk build`, `bk artifacts`, `bk api`) for Buildkite and the `gh`
+CLI / `git` for commit correlation. `bk api` is a raw REST/GraphQL passthrough scoped
+to the authenticated org — use it for anything the porcelain commands don't cover
+(annotations, job logs). Check `bk auth status` if calls fail.
+
 ## Phase 1: Identify the Build
 
 1. **Determine pipeline and build number.**
    - If the user provides a URL like `https://buildkite.com/org/pipeline/builds/123`,
      extract `org`, `pipeline`, and `build_number`.
-   - Otherwise, use `git branch --show-current` to get the branch name, then call
-     `list_builds` (`user-buildkite`) filtered by `branch` to find the latest failing build.
+   - Otherwise, use `git branch --show-current` to get the branch, then
+     `bk build list --branch "<branch>"` (add `-p <pipeline>` / `--state failed` to
+     narrow) to find the latest failing build.
 
-2. **Fetch build details** — `get_build` with the resolved `org`, `pipeline`, `build_number`.
-   Note: `state` (failed/passed), `branch`, `commit`, `created_at`, and each `jobs[]` entry.
+2. **Fetch build details** — `bk build view <build_number> -p <pipeline>`.
+   Note: `state` (failed/passed), `branch`, `commit`, `created_at`, and each job's
+   `id`, `name`, and `exit_status`.
 
-3. **Fetch annotations** — `list_annotations` for the build. Annotations often contain
-   structured test failure summaries that are faster to read than raw logs.
+3. **Fetch annotations** — `bk api /pipelines/<pipeline>/builds/<build_number>/annotations`.
+   Annotations often contain structured test-failure summaries that are faster to read
+   than raw logs.
 
 ## Phase 2: Pinpoint the Failing Step
 
-4. **Identify failed jobs** — from `get_build` response, filter `jobs[]` where `state = "failed"`.
-   Note each job's `id`, `name`, and `exit_status`.
+4. **Identify failed jobs** — from the `bk build view` output, filter jobs where
+   `state = "failed"`. Note each job's `id`, `name`, and `exit_status`.
 
-5. **For each failed job**, read logs in order:
-   - `read_logs` (full log, up to token limit)
-   - If the log is large, use `search_logs` with targeted patterns:
-     - `"ERROR"`, `"FAILED"`, `"AssertionError"`, `"ModuleNotFoundError"`, `"exit code"`
+5. **For each failed job**, read the log via the API:
+   - `bk api /pipelines/<pipeline>/builds/<build_number>/jobs/<job_id>/log`
+   - To search a large log, pipe it: `bk api .../jobs/<job_id>/log | grep -nE \
+     "ERROR|FAILED|AssertionError|ModuleNotFoundError|exit code"`
 
 6. **Categorize the failure type:**
 
@@ -37,11 +45,12 @@
 
 ## Phase 3: Correlate with Recent Changes
 
-7. **Identify the commit** — from `get_build`, take the `commit` SHA.
-   Call `get_commit` (`user-github`) for the diff summary and changed files.
+7. **Identify the commit** — from `bk build view`, take the `commit` SHA. Inspect it
+   with `git show --stat <sha>` (if local) or `gh api repos/{owner}/{repo}/commits/<sha>`
+   for the diff summary and changed files.
 
-8. **Check recent history** — `list_commits` for the branch (last 5) to spot if this is
-   a regression introduced in a recent merge.
+8. **Check recent history** — `git log --oneline -5 <branch>` to spot whether this is a
+   regression introduced in a recent merge.
 
 9. **Cross-reference** — if the failing test or file appears in the commit diff, that is
    the likely cause. State this explicitly.
@@ -75,18 +84,10 @@
 
 ## Rules
 
-- Never rerun the build without user confirmation.
-- Never unblock a job (`unblock_job`) unless explicitly asked.
-- If multiple jobs failed, diagnose the first chronological failure first — later failures
-  are often cascades.
-- If logs are inaccessible (auth error), instruct the user to run
-  `buildkite-agent artifact download` locally and share the output.
-
-## Fallback (no MCP access)
-
-```bash
-# Get recent builds for a pipeline
-buildkite-agent pipeline list
-# Fetch logs from a job
-buildkite-agent artifact download "*.log" . --build <build-uuid>
-```
+- Never rerun the build (`bk build rebuild`) without user confirmation.
+- Never unblock a job unless explicitly asked (do it via `bk api --method PUT
+  /pipelines/<pipeline>/builds/<n>/jobs/<job_id>/unblock` only on request).
+- If multiple jobs failed, diagnose the first chronological failure first — later
+  failures are often cascades.
+- If logs or the API are inaccessible, check `bk auth status`; for artifacts use
+  `bk artifacts list <build_number>` / `bk artifacts download <build_number>`.
