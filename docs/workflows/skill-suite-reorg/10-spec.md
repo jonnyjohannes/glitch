@@ -1,25 +1,20 @@
----
-type: workflow-artifact
-workflow: skill-suite-reorg
-artifact: spec
-status: draft
-owner_skill: tech-specer
-inputs:
-  - chat://current-session
-outputs:
-  - ./10-spec.md
-next:
-  - workflow-indexer
-  - task-sharder
-  - verification-planner
-updated: 2026-07-12
----
-
 # Skill Suite Reorg: Markdown Artifact Bus
+
+## Artifact Header
+
+| Field | Value |
+| --- | --- |
+| Workflow | `skill-suite-reorg` |
+| Artifact | `spec` (`10-spec.md`) |
+| Status | `draft` |
+| Owner skill | [[tech-specer]] |
+| Inputs | current session notes |
+| Next | [[workflow-indexer]], [[task-sharder]], [[verification-planner]] |
+| Updated | 2026-07-12 |
 
 ## Summary
 
-This spec proposes reorganizing the local skill suite around composable markdown artifacts on disk. Instead of relying on hidden chat/session state or monolithic orchestration skills, each skill should act like a small bounded transform over durable `.md` files: read artifact(s), perform one workflow operation, write the next artifact(s), and advertise likely downstream skills.
+This spec proposes reorganizing the local skill suite around composable markdown artifacts on disk. Instead of relying on hidden chat/session state, custom YAML frontmatter, or monolithic orchestration skills, each skill should act like a small bounded transform over durable `.md` files: read artifact(s), perform one workflow operation, write the next artifact(s), and advertise likely downstream skills through visible document structure.
 
 ## Problem Statement
 
@@ -32,7 +27,8 @@ This makes longer-running work more dependent on chat context and agent memory t
 - Define a markdown artifact bus for skill workflows, using files on disk as the primary composition layer.
 - Preserve small, single-responsibility skills instead of creating a monolithic project-manager skill.
 - Make long-running workflows resumable from files without requiring the original chat context.
-- Make downstream skill invocation explicit through artifact frontmatter and workflow indexes.
+- Avoid custom workflow YAML frontmatter; use path conventions, workflow index manifests, and visible Artifact Header sections instead.
+- Make downstream skill invocation explicit through workflow indexes and artifact headers.
 - Add complementary skills that fill routing, sharding, verification, risk, review-packet, and index-maintenance gaps.
 - Dogfood the new workflow layout with this spec under `docs/workflows/skill-suite-reorg/`.
 
@@ -104,7 +100,7 @@ This backbone is useful, but it currently lacks first-class workflow artifacts b
 
 ### Overview
 
-Adopt a lightweight markdown artifact protocol and a workflow directory convention. Skills should compose by reading and writing typed `.md` artifacts with YAML frontmatter. A workflow-local `index.md` acts as the durable router: it inventories artifacts, summarizes current state, and recommends next skills.
+Adopt a lightweight markdown artifact protocol and a workflow directory convention. Skills should compose by reading and writing typed `.md` artifacts whose identity comes primarily from their path and visible document structure, not custom top-level YAML frontmatter. A workflow-local `index.md` acts as the durable router: it inventories artifacts, summarizes current state, and recommends next skills.
 
 The reorg should add a few narrowly scoped skills that operate on this artifact bus rather than enlarging existing skills.
 
@@ -136,43 +132,65 @@ docs/workflows/<slug>/
 
 Artifacts are optional. A small change might only need `10-spec.md` or `20-tasks.md`; a larger change may use the full sequence.
 
-#### Artifact Frontmatter Contract
+#### Artifact Metadata Without Custom Frontmatter
 
-Each workflow artifact should use minimal YAML frontmatter that makes it machine- and agent-readable:
+Do **not** require custom YAML frontmatter for workflow metadata. Multiple harnesses, note systems, static-site tools, and agent loaders may already assign meanings to top-level frontmatter fields. The workflow bus should avoid becoming another incompatible frontmatter dialect.
 
-```yaml
----
-type: workflow-artifact
-workflow: skill-suite-reorg
-artifact: spec
-status: draft
-owner_skill: tech-specer
-inputs:
-  - ./00-brief.md
-outputs:
-  - ./10-spec.md
-next:
-  - task-sharder
-  - verification-planner
-updated: 2026-07-12
----
+Use three safer layers instead:
+
+1. **Path convention** — `docs/workflows/<slug>/<nn>-<artifact>.md` identifies workflow and artifact type.
+2. **Workflow index manifest** — `docs/workflows/<slug>/index.md` is the authoritative routing/control document.
+3. **Visible Artifact Header** — each artifact may include a small Markdown table near the top for human-readable status and next actions.
+
+Example Artifact Header:
+
+```markdown
+## Artifact Header
+
+| Field | Value |
+| --- | --- |
+| Workflow | `skill-suite-reorg` |
+| Artifact | `spec` (`10-spec.md`) |
+| Status | `draft` |
+| Owner skill | [[tech-specer]] |
+| Inputs | `00-brief.md`, current session notes |
+| Outputs | `10-spec.md` |
+| Next | [[task-sharder]], [[verification-planner]] |
+| Updated | 2026-07-12 |
 ```
 
-Recommended fields:
+Example workflow index manifest row:
 
-| Field | Type | Meaning |
-| --- | --- | --- |
-| `type` | string | Usually `workflow-artifact`. |
-| `workflow` | string | Stable workflow slug. |
-| `artifact` | string | Artifact kind: `index`, `brief`, `spec`, `tasks`, `verification`, `risk-impact`, `review-packet`, `handoff`, `retro`, `decision`, etc. |
-| `status` | string | `draft`, `ready`, `in-progress`, `blocked`, `done`, or `superseded`. |
-| `owner_skill` | string | Skill primarily responsible for maintaining the artifact. |
-| `inputs` | list | Relative artifact paths or external context references consumed. |
-| `outputs` | list | Relative artifact paths produced/updated. |
-| `next` | list | Suggested downstream skills. |
-| `updated` | date | Last material update date. |
+```markdown
+| Artifact | Status | Owner | Inputs | Outputs | Next |
+| --- | --- | --- | --- | --- | --- |
+| `10-spec.md` | draft | [[tech-specer]] | `00-brief.md` | `20-tasks.md`, `30-verification.md` | [[task-sharder]], [[verification-planner]] |
+```
 
-This should stay intentionally small. Skill-specific metadata can be added only when it improves composition.
+Recommended logical fields for the index/header:
+
+| Field | Meaning |
+| --- | --- |
+| Workflow | Stable workflow slug, usually inferred from directory name. |
+| Artifact | Artifact kind and filename: `index`, `brief`, `spec`, `tasks`, `verification`, `risk-impact`, `review-packet`, `handoff`, `retro`, `decision`, etc. |
+| Status | Recommended values: `draft`, `ready`, `in-progress`, `blocked`, `done`, or `superseded`. |
+| Owner skill | Skill primarily responsible for maintaining the artifact. |
+| Inputs | Relative artifact paths or external context references consumed. |
+| Outputs | Relative artifact paths produced/updated. |
+| Next | Suggested downstream skills. |
+| Updated | Last material update date. |
+
+If future automation needs machine parsing, prefer a fenced block **inside the document body** rather than top-level frontmatter:
+
+````markdown
+```workflow-artifact
+status: draft
+owner: tech-specer
+next: task-sharder, verification-planner
+```
+````
+
+That block is opt-in and subordinate to the visible Markdown, not required for basic skill composition.
 
 #### Skill Composition Model
 
@@ -205,7 +223,7 @@ Update expected behavior so it can suggest workflow-local specs for non-trivial 
 
 - Current default: `docs/specs/<name>.md`.
 - New preferred option for composable workflows: `docs/workflows/<slug>/10-spec.md`.
-- Add artifact frontmatter when writing workflow-local specs.
+- Add or update the visible Artifact Header and workflow `index.md` entry when writing workflow-local specs.
 - Preserve `## Plan Ledger` as the implementation-ready execution list.
 - Include `next` suggestions such as `task-sharder`, `verification-planner`, or `feature-builder`.
 
@@ -256,7 +274,7 @@ docs/workflows/<slug>/index.md
 Responsibilities:
 
 - Inventory workflow artifacts and task cards.
-- Summarize current state from artifact frontmatter and key sections.
+- Summarize current state from path conventions, Artifact Header sections, the workflow index manifest, and key artifact sections.
 - List blockers/open questions.
 - Recommend next 2-3 skills/actions.
 - Detect stale links, missing expected artifacts, or status inconsistencies.
@@ -409,7 +427,7 @@ This is useful when a decision should outlive a workflow-specific spec.
 
 ## Implementation Plan
 
-1. Define the workflow artifact convention in this spec — deliverable: completed `10-spec.md`; verify: frontmatter and layout sections are present.
+1. Define the workflow artifact convention in this spec — deliverable: completed `10-spec.md`; verify: layout convention and no-custom-frontmatter metadata pattern are documented.
 2. Create `docs/workflows/skill-suite-reorg/index.md` manually or via the future `workflow-indexer` design — deliverable: workflow router artifact; verify: links to this spec and current next actions.
 3. Add `workflow-indexer` skill — deliverable: `skills/workflow-indexer/SKILL.md`; verify: it can regenerate/update workflow `index.md` from artifacts.
 4. Add `task-sharder` skill — deliverable: `skills/task-sharder/SKILL.md`; verify: it can produce `20-tasks.md` and `tasks/*.md` from this spec.
@@ -424,8 +442,8 @@ This is useful when a decision should outlive a workflow-specific spec.
 
 Status: `[ ]` not started, `[~]` in progress, `[x]` done and verified, `[!]` blocked.
 
-- [~] 1. Scaffold skill suite reorg spec — deliverable: `docs/workflows/skill-suite-reorg/10-spec.md`; verify: file exists with workflow artifact frontmatter and initial plan.
-- [ ] 2. Decide artifact protocol details — deliverable: finalized frontmatter fields and workflow layout; verify: no unresolved protocol open questions.
+- [~] 1. Scaffold skill suite reorg spec — deliverable: `docs/workflows/skill-suite-reorg/10-spec.md`; verify: file exists with an Artifact Header and initial plan.
+- [~] 2. Decide artifact protocol details — deliverable: finalized metadata/header pattern and workflow layout; verify: no unresolved protocol open questions.
 - [ ] 3. Create workflow index artifact — deliverable: `docs/workflows/skill-suite-reorg/index.md`; verify: index links spec and lists next actions.
 - [ ] 4. Design `workflow-indexer` — deliverable: skill contract in spec; verify: responsibilities, inputs, outputs, and non-responsibilities are clear.
 - [ ] 5. Design `task-sharder` — deliverable: skill contract in spec; verify: task card schema is implementable.
@@ -446,7 +464,7 @@ Status: `[ ]` not started, `[~]` in progress, `[x]` done and verified, `[!]` blo
 ## Open Questions
 
 1. Should `docs/workflows/<slug>/index.md` be mandatory for every workflow, or only for multi-artifact workflows?
-2. Should workflow artifact frontmatter use strict status values, or stay loose/freeform?
+2. Should workflow artifact status values be strict (`draft`, `ready`, `in-progress`, `blocked`, `done`, `superseded`) or advisory/freeform?
 3. Should `task-sharder` create one overview plus task cards by default, or only task cards for larger specs?
 4. Should `skill-indexer` fully own `skills/README.md`, making manual edits disposable, or preserve custom prose around a generated table?
 5. Should optional skills like `blast-radius-mapper` and `review-packet-builder` be first-wave skills or wait until the core bus proves itself?
