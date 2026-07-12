@@ -10,7 +10,7 @@ tags: [skill, index]
 | Skill                                       | Description                                                                       |
 | ------------------------------------------- | --------------------------------------------------------------------------------- |
 | [doc-polisher](doc-polisher/SKILL.md)       | Format docs via nvim conform and standardize YAML frontmatter metadata            |
-| [feature-builder](feature-builder/SKILL.md) | Implement a feature from a plan or spec — review, cycle feedback, code, commit    |
+| [feature-builder](feature-builder/SKILL.md) | Build approved plans/specs, update durable progress ledgers, verify, commit      |
 | [git-committer](git-committer/SKILL.md)     | Group related changes from a git diff into clean atomic commits                   |
 | [handoff-writer](handoff-writer/SKILL.md)   | Snapshot session state into a handoff doc so a fresh agent can continue the work  |
 | [pr-drafter](pr-drafter/SKILL.md)           | Draft a PR description from git diff, linked issue, build status, and docs        |
@@ -20,4 +20,4 @@ tags: [skill, index]
 | [rosetta-stoner](rosetta-stoner/SKILL.md)   | Transliterate and translate classical and sacred texts with line-by-line meanings |
 | [skill-creator](skill-creator/SKILL.md)     | Create new agent skills in this library                                           |
 | [skill-sharpener](skill-sharpener/SKILL.md) | Refine existing skills by reconciling edits into clean SKILL.md                   |
-| [tech-specer](tech-specer/SKILL.md)         | Collaborative design partner that produces implementation-ready tech specs        |
+| [tech-specer](tech-specer/SKILL.md)         | Write implementation-ready specs with durable plans and progress ledgers          |
