@@ -1,3 +1,10 @@
+---
+name: buildkite-satisfier
+description: Investigates Buildkite failures using bk, gh, and git; use when diagnosing failed Buildkite builds, jobs, annotations, logs, or CI regressions.
+tools: [Bash, Read, Edit]
+tags: [skill, ci, buildkite]
+---
+
 # Buildkite Failure Investigator
 
 Uses the `bk` CLI (`bk build`, `bk artifacts`, `bk api`) for Buildkite and the `gh`

@@ -1,3 +1,10 @@
+---
+name: jira-ticket-writer
+description: Drafts concise Jira bug, story, or task descriptions from issue context and relevant code; use when creating or updating Jira tickets.
+tools: [Bash, Read]
+tags: [skill, jira, tickets]
+---
+
 # Jira Ticket Writer
 
 ## Phase 1: Understand the Problem

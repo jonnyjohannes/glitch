@@ -1,3 +1,10 @@
+---
+name: renovate-pr-consolidator
+description: Consolidates multiple open Renovate dependency PRs into one upgrade PR; use when reviewing, combining, validating, or replacing Renovate PRs.
+tools: [Bash, Read, Edit]
+tags: [skill, github, dependencies]
+---
+
 # Renovate PR Consolidator
 
 ## Phase 1: Discover Open Renovate PRs
