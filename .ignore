@@ -1,0 +1,6 @@
+# Keep markdown language servers/search tools from following dotfile symlink forests.
+# Canonical skill docs live in ./skills.
+dotclaude/
+dotcursor/
+dotdevin/
+dotpi/
