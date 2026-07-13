@@ -2,11 +2,11 @@
 
 ## Current State
 
-- Status: planning / simplifying
+- Status: core skill updates complete / scope check
 - Last updated: 2026-07-12
-- Current focus: update [[handoff-writer]] for replace-current `## Handoff` behavior in active `docs/plans/<slug>.md` plan docs.
+- Current focus: decide whether PR/review skills need lightweight plan-doc awareness now, or defer until the core `docs/plans` convention has more mileage.
 - Handoff lives in: [`## Handoff`](#handoff)
-- Next action: update [[handoff-writer]] so checkpointing prefers the active plan doc before standalone handoff files.
+- Next action: choose whether to update PR/review skills now or stop after the core trio ([[tech-specer]], [[feature-builder]], [[handoff-writer]]).
 
 ## Handoff
 
@@ -24,7 +24,8 @@ Current direction from the user:
 - Defer composed/new skills until the fundamentals feel solid.
 - [[tech-specer]] has been updated for the flat `docs/plans/<slug>.md` convention.
 - [[feature-builder]] has been updated to maintain active `docs/plans/<slug>.md` docs while implementing.
-- Next skill update target: [[handoff-writer]].
+- [[handoff-writer]] has been updated to replace `## Handoff` in active plan docs before falling back to standalone handoff docs.
+- Next decision: whether to update PR/review skills now or defer them.
 
 ## Summary
 
@@ -256,8 +257,8 @@ Status: `[ ]` not started, `[~]` in progress, `[x]` done and verified, `[!]` blo
 - [x] 3. Finalize plan-doc contract — deliverable: required sections, `docs/plans/<slug>.md` path, and replace-current handoff behavior; verify: user confirmed the shape is enough.
 - [x] 4. Update `tech-specer` — deliverable: revised skill instructions; verify: new plans are created as flat docs with `Current State` and `Handoff`.
 - [x] 5. Update `feature-builder` — deliverable: revised skill instructions; verify: implementation progress updates the plan doc.
-- [~] 6. Update `handoff-writer` — deliverable: revised skill instructions; verify: active plan docs receive handoff updates.
-- [ ] 7. Decide whether PR/review skills need lightweight plan-doc awareness now — deliverable: scope decision; verify: no unnecessary skill churn.
+- [x] 6. Update `handoff-writer` — deliverable: revised skill instructions; verify: active plan docs receive handoff updates.
+- [~] 7. Decide whether PR/review skills need lightweight plan-doc awareness now — deliverable: scope decision; verify: no unnecessary skill churn.
 - [ ] 8. Commit final skill updates — deliverable: clean commits; verify: `git status` is clean except intentionally unrelated user edits.
 
 ## Verification
@@ -283,8 +284,8 @@ Status: `[ ]` not started, `[~]` in progress, `[x]` done and verified, `[!]` blo
 
 ## Implementability Check
 
-Current verdict: **not ready**.
+Current verdict: **mostly ready**.
 
-Gaps before implementation:
+Remaining scope decision:
 
-- Update [[handoff-writer]] so active plan docs get replace-current `## Handoff` updates.
+- Decide whether to update PR/review skills now or defer them until the core `docs/plans` convention has been dogfooded more.
