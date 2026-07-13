@@ -10,7 +10,7 @@ tags: [skill, index]
 | Skill                                       | Description                                                                       |
 | ------------------------------------------- | --------------------------------------------------------------------------------- |
 | [doc-polisher](doc-polisher/SKILL.md)       | Format docs via nvim conform and standardize YAML frontmatter metadata            |
-| [feature-builder](feature-builder/SKILL.md) | Build approved plans/specs, update durable progress ledgers, verify, commit      |
+| [feature-builder](feature-builder/SKILL.md) | Build approved docs/plans while maintaining current state, handoff, and ledger    |
 | [git-committer](git-committer/SKILL.md)     | Group related changes from a git diff into clean atomic commits                   |
 | [handoff-writer](handoff-writer/SKILL.md)   | Snapshot session state into a handoff doc so a fresh agent can continue the work  |
 | [pr-drafter](pr-drafter/SKILL.md)           | Draft a PR description from git diff, linked issue, build status, and docs        |

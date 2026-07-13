@@ -4,9 +4,9 @@
 
 - Status: planning / simplifying
 - Last updated: 2026-07-12
-- Current focus: decide the minimal [[feature-builder]] / [[handoff-writer]] updates for maintaining `docs/plans/<slug>.md` during implementation and handoff.
+- Current focus: update [[handoff-writer]] for replace-current `## Handoff` behavior in active `docs/plans/<slug>.md` plan docs.
 - Handoff lives in: [`## Handoff`](#handoff)
-- Next action: update [[feature-builder]] so implementation work maintains the active plan doc; then update [[handoff-writer]] for replace-current `## Handoff` behavior.
+- Next action: update [[handoff-writer]] so checkpointing prefers the active plan doc before standalone handoff files.
 
 ## Handoff
 
@@ -23,7 +23,8 @@ Current direction from the user:
 - Treat `## Handoff` as the latest resume state, replacing stale content rather than accumulating append-only history.
 - Defer composed/new skills until the fundamentals feel solid.
 - [[tech-specer]] has been updated for the flat `docs/plans/<slug>.md` convention.
-- Next skill update target: [[feature-builder]], then [[handoff-writer]].
+- [[feature-builder]] has been updated to maintain active `docs/plans/<slug>.md` docs while implementing.
+- Next skill update target: [[handoff-writer]].
 
 ## Summary
 
@@ -254,8 +255,8 @@ Status: `[ ]` not started, `[~]` in progress, `[x]` done and verified, `[!]` blo
 - [x] 2. Flatten this workflow — deliverable: `docs/plans/skill-suite-reorg.md`; verify: nested `docs/workflows/skill-suite-reorg/` files are removed.
 - [x] 3. Finalize plan-doc contract — deliverable: required sections, `docs/plans/<slug>.md` path, and replace-current handoff behavior; verify: user confirmed the shape is enough.
 - [x] 4. Update `tech-specer` — deliverable: revised skill instructions; verify: new plans are created as flat docs with `Current State` and `Handoff`.
-- [~] 5. Update `feature-builder` — deliverable: revised skill instructions; verify: implementation progress updates the plan doc.
-- [ ] 6. Update `handoff-writer` — deliverable: revised skill instructions; verify: active plan docs receive handoff updates.
+- [x] 5. Update `feature-builder` — deliverable: revised skill instructions; verify: implementation progress updates the plan doc.
+- [~] 6. Update `handoff-writer` — deliverable: revised skill instructions; verify: active plan docs receive handoff updates.
 - [ ] 7. Decide whether PR/review skills need lightweight plan-doc awareness now — deliverable: scope decision; verify: no unnecessary skill churn.
 - [ ] 8. Commit final skill updates — deliverable: clean commits; verify: `git status` is clean except intentionally unrelated user edits.
 
@@ -286,5 +287,4 @@ Current verdict: **not ready**.
 
 Gaps before implementation:
 
-- Update [[feature-builder]] so implementation work maintains `docs/plans/<slug>.md`.
 - Update [[handoff-writer]] so active plan docs get replace-current `## Handoff` updates.
