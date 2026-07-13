@@ -1,10 +1,10 @@
 ---
 name: pr-drafter
 description: >-
-  Drafts a complete, team-ready pull request description by combining the git
-  diff, linked issue context, build status, and relevant internal documentation.
-  Matches the repo's PR template if one exists. Use when the user asks to
-  "draft a PR", "write my PR description", or "create a pull request".
+  Drafts or creates team-ready pull requests from the repo template, git diff,
+  linked issue, build status, plan docs, and relevant internal context. Treats
+  repository PR templates as required output contracts. Use when the user asks
+  to "draft a PR", "write my PR description", or "create a pull request".
 tools: [Bash, Read, Glob]
 tags: [skill, github, authoring]
 ---
@@ -13,37 +13,60 @@ tags: [skill, github, authoring]
 
 ## Interface
 
-**Inputs**: branch with commits ready for PR (use [[git-committer]] to prep)
-**Outputs**: draft pull request on GitHub
-**Side effects**: creates GitHub PR via `gh pr create` (default `--draft`)
+**Inputs**: branch with commits ready for PR (use [[git-committer]] to prep), optional base branch or template choice
+**Outputs**: user-approved PR title/body conforming to the selected repository template
+**Side effects**: creates GitHub PR via `gh pr create` only after approval (default `--draft`)
 
-## Phase 1: Gather Repository Context
+## Core Contract: Template First
 
-1. **Current branch and remote** — run `git branch --show-current` and
-   `git remote get-url origin`. Extract `owner` and `repo`.
+A repository PR template is the output contract, not inspiration.
 
-2. **Full diff** — `git diff main...HEAD` (or the base branch). Note all changed
-   files, added/removed functions, and config changes.
+When a template exists:
 
-3. **Commits on this branch** — `git log main..HEAD --oneline`. Understand the
-   narrative: is this one logical change or several squashed?
+- Preserve its headings, order, checklists, and requested sections.
+- Fill the template in place; do not substitute the fallback format.
+- Do not rename, reorder, or remove sections because another structure reads better.
+- Use `N/A — <reason>` for genuinely inapplicable sections rather than deleting them.
+- Preserve HTML guidance comments unless they explicitly instruct authors to remove them.
+- Replace visible placeholders such as `<description>` or `TODO`; do not ship unfilled prompts.
+- Check a box only when evidence supports it. Keep unsupported boxes unchecked.
+- Put extra context into the closest template section. Ask before adding new top-level headings.
 
-4. **PR template** — search the repo for a PR template. GitHub (and `gh pr create`)
-   resolve templates case-insensitively from the repo root, `.github/`, and `docs/`.
-   Cover all variants:
+The approved preview and the `--body-file` passed to `gh pr create` must be the same content.
 
-   - `pull_request_template.md` / `PULL_REQUEST_TEMPLATE.md` (repo root)
-   - `.github/pull_request_template.md` / `.github/PULL_REQUEST_TEMPLATE.md`
-   - `docs/pull_request_template.md` / `docs/PULL_REQUEST_TEMPLATE.md`
-   - `PULL_REQUEST_TEMPLATE/*.md` (root multi-template folder)
-   - `.github/PULL_REQUEST_TEMPLATE/*.md`
-   - `docs/PULL_REQUEST_TEMPLATE/*.md`
+## Phase 1: Select the Template and Gather Repository Context
 
-   One-shot lookup:
-   `find . .github docs -maxdepth 2 -iname 'pull_request_template*' -not -path '*/node_modules/*' 2>/dev/null`
+1. **Current branch, remote, and base** — run `git branch --show-current` and
+   `git remote get-url origin`. Resolve the base from the user, existing PR metadata,
+   or the remote default branch; do not assume `main` when the repo says otherwise.
 
-   If found, read it. The draft **must** populate every section of the template.
-   If multiple templates exist (multi-template folder), ask the user which to use.
+2. **Select the PR template before drafting** — search case-insensitively in the
+   base branch and working tree for:
+
+   - `pull_request_template.md` at repo root, `.github/`, or `docs/`
+   - `PULL_REQUEST_TEMPLATE/*.md` at repo root, `.github/`, or `docs/`
+
+   Exclude generated/vendor directories. Prefer the base-branch version because that
+   is the target repository contract; use the working-tree copy when no base version
+   is available.
+
+   Selection rules:
+
+   - User explicitly names a template → use it.
+   - Exactly one applicable template → use it automatically.
+   - Multiple named templates → show filenames/titles and ask which one to use.
+   - Default template plus named alternatives → use the default unless the user asks
+     for a named alternative.
+   - No template → use the fallback structure in Phase 5.
+
+   Read and retain the exact selected template before gathering prose. Record its path
+   so the review phase can validate the final body against it.
+
+3. **Full diff** — `git diff <base>...HEAD`. Note changed behavior, files,
+   functions, tests, configuration, migrations, and operational impact.
+
+4. **Commits on this branch** — `git log <base>..HEAD --oneline`. Understand the
+   change narrative and whether multiple concerns need to be grouped in prose.
 
 ## Phase 2: Linked Issue
 
@@ -62,8 +85,8 @@ tags: [skill, github, authoring]
 
 ## Phase 4: Internal Context (Glean)
 
-8. **Search for relevant internal docs** — `glean search "<PR topic keywords>"` (see
-   [[glean-knowledge-search]]), e.g. "keyword mapper performance", "BigQuery CTE refactor".
+8. **Search for relevant internal docs** — use `glean search "<PR topic keywords>"`,
+   e.g. "keyword mapper performance" or "BigQuery CTE refactor".
 
    Look for: design docs, ADRs, Confluence pages, or prior related PRs to link in the
    description. At most 2–3 links — do not flood the PR with tangential references.
@@ -72,10 +95,27 @@ tags: [skill, github, authoring]
    same repo. Note if a similar change was previously attempted or reverted — flag this
    to the user.
 
-## Phase 5: Draft
+## Phase 5: Draft Against the Contract
 
-Compose the PR description. If a template exists, fill every section.
-If no template exists, use this structure:
+### Template exists
+
+Start from an exact copy of the selected template and fill it in place.
+
+For every heading, prompt, and checklist item:
+
+1. Identify what evidence it requests.
+2. Fill it from the diff, issue, build, plan doc, or verified internal context.
+3. If it does not apply, write `N/A — <specific reason>` while retaining the section.
+4. Leave checklist items unchecked unless they are demonstrably complete.
+5. Preserve the original section order and wording.
+
+Do not graft the fallback headings below onto a repository template. If useful context
+has no obvious home, ask the user whether to append it rather than silently changing
+the contract.
+
+### No template exists
+
+Use this fallback structure:
 
 ```markdown
 ## Summary
@@ -124,15 +164,32 @@ Revert this PR. No schema or data migrations required. <!-- adjust as needed -->
 -
 ```
 
-## Phase 6: Review Before Posting
+## Phase 6: Template Fidelity Check and Approval
 
-Present the draft to the user. Ask:
+When a template was selected, compare the draft with it line by line before presenting.
 
-> "Does this look accurate? Should I create the PR now, or do you want to edit first?"
+Template fidelity checklist:
 
-Do **not** run `gh pr create` until the user explicitly confirms.
+- [ ] Selected template path is stated.
+- [ ] Every template heading is present with exact wording and original order.
+- [ ] Every requested section contains content or an explicit `N/A — <reason>`.
+- [ ] Template checklist items are preserved and truthfully checked/unchecked.
+- [ ] Required HTML comments/instructions are preserved.
+- [ ] No visible placeholder text remains.
+- [ ] No fallback headings replaced or displaced template sections.
+- [ ] No new top-level heading was added without user approval.
 
-Once confirmed (write the approved draft to a file, then):
+If any check fails, fix the body before showing it to the user.
+
+Present the title and complete body, naming the template used. Ask:
+
+> "This draft follows `<template path>`. Does it look accurate? Should I create the PR now, or do you want to edit first?"
+
+When no template exists, say that explicitly and note that the fallback structure was
+used.
+
+Do **not** run `gh pr create` until the user explicitly confirms. After edits, rerun
+the fidelity check. Write the exact approved body to a file, then run:
 
 ```bash
 gh pr create --draft \
@@ -145,10 +202,15 @@ gh pr create --draft \
 
 ## Rules
 
+- **Template beats house style** — repository template structure always takes priority
+  over the fallback format and personal formatting preferences.
+- **No silent template drift** — never remove, rename, reorder, or replace template
+  sections without explicit user approval.
 - Never push commits or force-push before creating the PR.
 - Default to `draft: true` — let the user promote to ready-for-review.
 - If the build is failing, block PR creation and surface the failure first.
-- Do not invent issue numbers, doc links, or test commands — only include what was
-  actually found.
-- If no linked issue exists, omit "Closes #" rather than leaving a broken reference.
-- Keep the summary ≤ 4 bullets. If there are more changes, group them by concern.
+- Do not invent issue numbers, doc links, test commands, or checked boxes — include
+  only what the gathered evidence supports.
+- If no linked issue exists, follow the template's convention; otherwise omit
+  `Closes #` rather than leaving a broken reference.
+- Keep summaries concise unless the selected template requests otherwise.
