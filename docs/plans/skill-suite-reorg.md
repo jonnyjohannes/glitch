@@ -4,9 +4,9 @@
 
 - Status: planning / simplifying
 - Last updated: 2026-07-12
-- Current focus: define the minimal markdown plan-doc contract before adding composed skills.
+- Current focus: decide the minimal [[feature-builder]] / [[handoff-writer]] updates for maintaining `docs/plans/<slug>.md` during implementation and handoff.
 - Handoff lives in: [`## Handoff`](#handoff)
-- Next action: sharpen this plan until the existing core skills can be updated without introducing a larger artifact framework.
+- Next action: update [[feature-builder]] so implementation work maintains the active plan doc; then update [[handoff-writer]] for replace-current `## Handoff` behavior.
 
 ## Handoff
 
@@ -15,12 +15,15 @@ Resume here by reading this file top to bottom, then continue from [`## Open Que
 Current direction from the user:
 
 - Keep the workflow fundamentals simple.
-- Standardize a flat directory structure.
+- Standardize on `docs/plans/<slug>.md`.
 - Prefer `1 feature ~= 1 plan doc`.
 - Centralize workflow state in markdown.
 - Do not prioritize a dashboard/index entrypoint right now.
 - Make current state and handoff obvious inside the plan doc itself.
+- Treat `## Handoff` as the latest resume state, replacing stale content rather than accumulating append-only history.
 - Defer composed/new skills until the fundamentals feel solid.
+- [[tech-specer]] has been updated for the flat `docs/plans/<slug>.md` convention.
+- Next skill update target: [[feature-builder]], then [[handoff-writer]].
 
 ## Summary
 
@@ -61,19 +64,19 @@ That plan doc should make current state, handoff, decisions, tasks, and verifica
 
 ### Directory Convention
 
-Use a flat workflow-plan directory:
+Use a flat plan-doc directory:
 
 ```text
-docs/workflows/
+docs/plans/
   <slug>.md
 ```
 
 Examples:
 
 ```text
-docs/workflows/skill-suite-reorg.md
-docs/workflows/checkout-replatform.md
-docs/workflows/search-ranking-debug.md
+docs/plans/skill-suite-reorg.md
+docs/plans/checkout-replatform.md
+docs/plans/search-ranking-debug.md
 ```
 
 A single plan doc is the default. If supporting files become necessary later, they should be added intentionally, not as part of the baseline protocol.
@@ -176,23 +179,25 @@ It should include:
 - What must not be forgotten.
 - The next concrete action.
 
-`handoff-writer` should prefer updating this section in the active plan doc before creating a separate handoff file. Separate handoff docs remain useful only when there is no active plan doc or when a very large handoff would clutter the plan.
+`## Handoff` should be a replace-current section: it contains the latest resume instructions, not an append-only history. Old handoff states are recoverable through git history. This keeps the plan doc useful for a fresh agent without forcing it to interpret stale resume notes.
+
+`handoff-writer` should prefer replacing this section in the active plan doc before creating a separate handoff file. Separate handoff docs remain useful only when there is no active plan doc or when a very large handoff would clutter the plan.
 
 ### Skill Behavior Updates
 
 #### `tech-specer`
 
-- Default non-trivial planning output should be `docs/workflows/<slug>.md`.
+- Default non-trivial planning output should be `docs/plans/<slug>.md`.
 - Create the plan doc early.
 - Keep `## Current State`, `## Handoff`, `## Implementation Plan`, `## Plan Ledger`, and `## Open Questions` current.
 - Do not introduce workflow dashboards or multi-artifact structures by default.
 
 #### `feature-builder`
 
-- Accept `docs/workflows/<slug>.md` as the preferred plan input.
+- Accept `docs/plans/<slug>.md` as the preferred plan input.
 - Read `## Current State`, `## Handoff`, `## Implementation Plan`, and `## Plan Ledger` before implementing.
-- Update `## Current State` and ledger rows at meaningful milestones.
-- If blocked, mark affected ledger rows `[!]` and update handoff with the blocker and next options.
+- Maintain the active plan doc while implementing: update `## Current State`, `## Handoff`, and ledger rows at meaningful milestones.
+- If blocked, mark affected ledger rows `[!]` and replace the handoff with the blocker and next options.
 
 #### `handoff-writer`
 
@@ -233,9 +238,9 @@ If they return, they should compose around the single plan doc rather than repla
 
 ## Implementation Plan
 
-1. Collapse this workflow from nested artifacts to one flat plan doc — deliverable: `docs/workflows/skill-suite-reorg.md`; verify: old `docs/workflows/skill-suite-reorg/` artifacts are removed.
-2. Finalize the plan-doc section contract — deliverable: approved section list and required/minimal fields; verify: no blocking open questions about structure.
-3. Update `tech-specer` — deliverable: skill prefers `docs/workflows/<slug>.md` and maintains `Current State`/`Handoff`; verify: skill instructions mention the simple flat convention.
+1. Collapse this workflow from nested artifacts to one flat plan doc — deliverable: `docs/plans/skill-suite-reorg.md`; verify: old `docs/workflows/skill-suite-reorg/` artifacts are removed.
+2. Finalize the plan-doc section contract — deliverable: approved section list, `docs/plans/<slug>.md` path, and replace-current handoff behavior; verify: no blocking open questions about structure.
+3. Update `tech-specer` — deliverable: skill prefers `docs/plans/<slug>.md` and maintains `Current State`/`Handoff`; verify: skill instructions mention the simple flat convention.
 4. Update `feature-builder` — deliverable: skill reads and updates plan docs; verify: ledger/current-state update behavior is explicit.
 5. Update `handoff-writer` — deliverable: skill updates plan-doc `## Handoff` when available; verify: standalone handoff remains fallback.
 6. Optionally update PR/review skills — deliverable: skills look for plan docs as context; verify: no multi-artifact assumptions are introduced.
@@ -246,17 +251,17 @@ If they return, they should compose around the single plan doc rather than repla
 Status: `[ ]` not started, `[~]` in progress, `[x]` done and verified, `[!]` blocked.
 
 - [x] 1. Simplify workflow artifact model — deliverable: this plan defines `1 feature ~= 1 plan doc`; verify: previous dashboard/index approach is deferred.
-- [x] 2. Flatten this workflow — deliverable: `docs/workflows/skill-suite-reorg.md`; verify: nested `docs/workflows/skill-suite-reorg/` files are removed.
-- [~] 3. Finalize plan-doc contract — deliverable: required sections and minimal fields; verify: user confirms the shape is enough.
-- [ ] 4. Update `tech-specer` — deliverable: revised skill instructions; verify: new plans are created as flat docs with `Current State` and `Handoff`.
-- [ ] 5. Update `feature-builder` — deliverable: revised skill instructions; verify: implementation progress updates the plan doc.
+- [x] 2. Flatten this workflow — deliverable: `docs/plans/skill-suite-reorg.md`; verify: nested `docs/workflows/skill-suite-reorg/` files are removed.
+- [x] 3. Finalize plan-doc contract — deliverable: required sections, `docs/plans/<slug>.md` path, and replace-current handoff behavior; verify: user confirmed the shape is enough.
+- [x] 4. Update `tech-specer` — deliverable: revised skill instructions; verify: new plans are created as flat docs with `Current State` and `Handoff`.
+- [~] 5. Update `feature-builder` — deliverable: revised skill instructions; verify: implementation progress updates the plan doc.
 - [ ] 6. Update `handoff-writer` — deliverable: revised skill instructions; verify: active plan docs receive handoff updates.
 - [ ] 7. Decide whether PR/review skills need lightweight plan-doc awareness now — deliverable: scope decision; verify: no unnecessary skill churn.
 - [ ] 8. Commit final skill updates — deliverable: clean commits; verify: `git status` is clean except intentionally unrelated user edits.
 
 ## Verification
 
-- `git status --short` shows the old nested workflow files removed and the flat plan doc present.
+- `git status --short` shows the old nested workflow files removed and `docs/plans/skill-suite-reorg.md` present.
 - The flat plan doc contains `## Current State` and `## Handoff` near the top.
 - The plan does not require `index.md`, generated blocks, task-card directories, or custom workflow metadata.
 - Existing skill update plan is limited to fundamentals: `tech-specer`, `feature-builder`, and `handoff-writer` first.
@@ -264,17 +269,16 @@ Status: `[ ]` not started, `[~]` in progress, `[x]` done and verified, `[!]` blo
 ## Decisions
 
 - Use markdown as the central workflow state.
-- Prefer one flat plan doc per feature/workflow.
+- Prefer one flat plan doc per feature/workflow under `docs/plans/<slug>.md`.
 - Put current state and handoff near the top of the plan doc.
+- Treat `## Handoff` as replace-current resume state; git history carries older handoffs.
 - Defer composed/new skills until the plan-doc convention is stable.
 - Avoid custom top-level YAML frontmatter for workflow state.
 
 ## Open Questions
 
-1. Is `docs/workflows/<slug>.md` the preferred standard path, or should this be `docs/plans/<slug>.md`?
-2. Are the required sections enough: `Current State`, `Handoff`, implementation/ledger, and open questions?
-3. Should `handoff-writer` replace the whole `## Handoff` section or append timestamped handoff entries under it?
-4. Which skills should be updated in the first pass: only `tech-specer`/`feature-builder`/`handoff-writer`, or also PR/review skills?
+1. Are the required sections enough: `Current State`, `Handoff`, implementation/ledger, and open questions?
+2. Which skills should be updated in the first pass: only `tech-specer`/`feature-builder`/`handoff-writer`, or also PR/review skills?
 
 ## Implementability Check
 
@@ -282,6 +286,5 @@ Current verdict: **not ready**.
 
 Gaps before implementation:
 
-- Confirm the standard path.
-- Confirm whether handoff replacement or append-only handoff history is preferred.
-- Confirm first-pass skill update scope.
+- Update [[feature-builder]] so implementation work maintains `docs/plans/<slug>.md`.
+- Update [[handoff-writer]] so active plan docs get replace-current `## Handoff` updates.

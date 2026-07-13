@@ -20,4 +20,4 @@ tags: [skill, index]
 | [rosetta-stoner](rosetta-stoner/SKILL.md)   | Transliterate and translate classical and sacred texts with line-by-line meanings |
 | [skill-creator](skill-creator/SKILL.md)     | Create new agent skills in this library                                           |
 | [skill-sharpener](skill-sharpener/SKILL.md) | Refine existing skills by reconciling edits into clean SKILL.md                   |
-| [tech-specer](tech-specer/SKILL.md)         | Write implementation-ready specs with durable plans and progress ledgers          |
+| [tech-specer](tech-specer/SKILL.md)         | Write docs/plans with current state, handoff, implementation plan, and ledger     |
