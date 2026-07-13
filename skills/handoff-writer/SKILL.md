@@ -1,50 +1,55 @@
 ---
 name: handoff-writer
 description: >-
-  Capture the current session's state into a handoff doc so a fresh agent
-  instance can pick up where this one left off. Resolves the target file from
-  user arg, then memory, then falls back to `<cwd>/docs/<derived>.md`. Use
-  when the user says "hand off", "save state", "write handoff", "checkpoint",
-  "snapshot the session", "context dump", "continue later", or "another agent
-  will take over".
+  Capture the current session's state so a fresh agent can resume. Prefer
+  replacing `## Handoff` in an active docs/plans plan doc; otherwise write or
+  update a standalone handoff doc. Use when the user says "hand off", "save
+  state", "write handoff", "checkpoint", "snapshot the session", "context
+  dump", "continue later", or "another agent will take over".
 tools: [Read, Write, Edit, Glob, Grep, Bash]
 tags: [skill, workflow, session, handoff]
 ---
 
 # Handoff Writer
 
-Writes a self-contained handoff doc so a new agent instance can resume the work without the original conversation.
+Writes the latest resume state so a new agent instance can continue without the original conversation.
 
 ## Interface
 
-**Inputs**: optional file path arg; otherwise resolves from memory or falls back to `<cwd>/docs/<derived>.md`
-**Outputs**: a handoff markdown doc containing goal, plan progress, what's done, what's next, key decisions, files touched, blockers, resume commands
-**Side effects**: writes/updates the handoff file; on first creation, saves a `project`-type memory pointing at it so future invocations find the same file
+**Inputs**: optional file path arg, active `docs/plans/<slug>.md` plan doc, or current session state
+**Outputs**: replaced `## Handoff` section in the active plan doc, or a standalone handoff markdown doc
+**Side effects**: edits plan docs or handoff docs; for standalone handoff creation, may save a `project`-type memory pointing at it so future invocations find the same file
 
 ## Core Principle
 
-The handoff doc is **the briefing for a stranger who just walked in**.
+The handoff is **the briefing for a stranger who just walked in**.
 
-They don't see this conversation. Everything they need to continue must be in the doc — goal, where the plan stands, why decisions were made, what to do next.
+They don't see this conversation. Everything they need to continue must be in durable markdown — goal, where the plan stands, why decisions were made, what to do next.
 
-If a future-you couldn't resume from the doc alone, it's not done.
+If there is an active `docs/plans/<slug>.md` plan doc, its `## Handoff` section is the preferred resume point. Keep it current by replacing stale content with the latest state. Git history carries older handoffs.
+
+If there is no active plan doc, write a standalone handoff doc.
 
 ## Resolve Target File
 
 Resolve in this order — stop at the first hit:
 
 1. **User-provided path** → arg to the skill (absolute or relative to cwd). Use as-is.
-2. **Memory lookup** → search current project's memory dir for an entry pointing at a handoff doc. The path is stored as `handoff_doc_path` in a memory of type `project`. If found and the file still exists, use it.
-3. **Fallback** → derive a slug from the active topic (task, branch, or main goal), then use `<cwd>/docs/handoff-<slug>.md`. Create `<cwd>/docs/` if missing.
+2. **Active plan doc** → if the conversation or working tree clearly points at `docs/plans/<slug>.md`, update that file's `## Handoff` section.
+3. **Plan doc discovery** → if `docs/plans/` contains exactly one likely active plan for this task, ask before using it; if ambiguous, present 2-3 concrete choices + `other`.
+4. **Memory lookup** → search current project's memory dir for an entry pointing at a standalone handoff doc. The path is stored as `handoff_doc_path` in a memory of type `project`. If found and the file still exists, use it.
+5. **Fallback** → derive a slug from the active topic (task, branch, or main goal), then use `<cwd>/docs/handoff-<slug>.md`. Create `<cwd>/docs/` if missing.
 
-If the resolved file exists, **read it first** — preserve prior context, update in place. If it doesn't exist, scaffold from the [output format](#output-format).
+If the resolved target is a plan doc, read it first and replace only its `## Handoff` body. If it lacks `## Handoff`, add one near the top after `## Current State` when present.
+
+If the resolved target is a standalone handoff file, read it first — preserve prior context, update in place. If it doesn't exist, scaffold from the [standalone output format](#standalone-output-format).
 
 ## Workflow
 
-- [ ] Step 1: Resolve target file (above)
+- [ ] Step 1: Resolve target (plan doc preferred, standalone handoff fallback)
 - [ ] Step 2: Gather session state
-- [ ] Step 3: Write or update the doc
-- [ ] Step 4: Persist the path to memory (first creation only)
+- [ ] Step 3: Write or update the target
+- [ ] Step 4: Persist standalone handoff path to memory (first standalone creation only)
 - [ ] Step 5: Confirm with the user
 
 ### Step 2: Gather Session State
@@ -66,9 +71,20 @@ Skip sections that don't apply. Don't pad.
 
 ### Step 3: Write or Update
 
-**New file** → scaffold using the [output format](#output-format) and fill every applicable section.
+**Active plan doc** → replace the `## Handoff` section with the latest resume state. Keep it concise and current:
 
-**Existing file** → read it, reconcile with current session:
+- what to read first
+- what is already decided
+- what is in flight
+- next concrete action
+- blockers / open questions
+- relevant commands or paths
+
+Also update `## Current State` when present if the status, focus, or next action changed. Do not append stale handoff history into the plan doc.
+
+**New standalone file** → scaffold using the [standalone output format](#standalone-output-format) and fill every applicable section.
+
+**Existing standalone file** → read it, reconcile with current session:
 
 - update plan status markers
 - append to "done" rather than replacing
@@ -78,7 +94,7 @@ Skip sections that don't apply. Don't pad.
 
 ### Step 4: Persist Path to Memory
 
-If this is a new handoff doc (target didn't exist before this run), save a `project`-type memory in the current project's memory dir:
+If this is a new standalone handoff doc (target didn't exist before this run), save a `project`-type memory in the current project's memory dir:
 
 ```yaml
 ---
@@ -94,13 +110,33 @@ Active handoff doc: `<absolute path>`
 **How to apply:** when [[handoff-writer]] runs, check this memory before falling back to a derived path.
 ```
 
-Then add a line to `MEMORY.md`. Skip if the memory already exists.
+Then add a line to `MEMORY.md`. Skip if the memory already exists. Do not create a standalone handoff memory when updating a `docs/plans/<slug>.md` plan doc; the plan doc is already discoverable by path.
 
 ### Step 5: Confirm
 
-Tell the user the resolved path and a one-line summary of what was captured. Offer to commit if the file is under git.
+Tell the user the resolved path and a one-line summary of what was captured. If you updated a plan doc, say that `## Handoff` now contains the latest resume state. Offer to commit if the file is under git.
 
-## Output Format
+## Plan Doc Handoff Format
+
+When updating a plan doc, replace the body under `## Handoff` with a concise latest-state block:
+
+```markdown
+## Handoff
+
+Resume here by reading this plan doc top to bottom, then continue from [specific section or next action].
+
+Current state:
+
+- Done: ...
+- In flight: ...
+- Next: ...
+- Blockers: ...
+- Key context: ...
+```
+
+Omit bullets that do not apply. Keep this section current, not historical.
+
+## Standalone Output Format
 
 ```markdown
 # Handoff: [topic]
@@ -178,11 +214,15 @@ A short, accurate handoff beats a long, vague one. If a section doesn't apply, o
 
 ### preserve, don't overwrite
 
-When updating, treat the file as a living artifact. Append to history, replace point-in-time state, never silently drop user-authored content.
+When updating a standalone handoff doc, treat the file as a living artifact. Append to history, replace point-in-time state, never silently drop user-authored content.
+
+When updating a plan doc, preserve the surrounding plan and replace only `## Handoff` plus small `## Current State` fields as needed.
 
 ### compose with [[tech-specer]]
 
-If there's already a tech spec for the work, **link to it** in Context — do not duplicate the spec into the handoff. The handoff is about *where we are*, the spec is about *what we're building*.
+If there's already a `docs/plans/<slug>.md` plan doc for the work, update its `## Handoff` section instead of creating a separate handoff. The plan doc is about *what we're building* and *where we are*.
+
+If using a standalone handoff because no plan doc exists, link to any relevant plan/spec in Context — do not duplicate it.
 
 ### compose with [[git-committer]]
 
@@ -190,10 +230,11 @@ After writing the handoff, if the file is tracked by git, offer to commit it via
 
 ## Failure Modes
 
-- writing the doc as a stream-of-consciousness session diary instead of an oriented briefing
+- writing the handoff as a stream-of-consciousness session diary instead of an oriented briefing
+- appending stale handoff entries into a plan doc instead of replacing `## Handoff`
 - skipping the *why* on decisions — next agent re-debates them
 - vague "next" steps the next agent can't act on
-- forgetting to save the memory pointer → future invocations create duplicate docs
+- forgetting to save the memory pointer for standalone handoff docs → future invocations create duplicate docs
 - losing user-authored content on update
 
 ## Heuristic
