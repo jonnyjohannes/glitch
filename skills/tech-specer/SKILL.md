@@ -41,6 +41,26 @@ During this skill, do not modify implementation/source files, tests, configs, mi
 
 If implementation changes become necessary, stop once the plan doc and ledger are ready, then hand off to [[feature-builder]] after user confirmation.
 
+### Wayfair context via Glean
+
+For Wayfair-scoped plans, treat the authenticated `glean` CLI as an available internal knowledge source. Query it proactively when the design depends on Wayfair-specific:
+
+- business domains, processes, or terminology
+- platforms, infrastructure, services, or ownership
+- architecture guidance and coding practices
+- acronyms, jargon, historical decisions, or prior art
+
+Prefer the local CLI over external web research:
+
+```bash
+glean search "<focused query>" --return-llm-content --page-size 10 --max-snippet-size 10000
+glean chat --save=false "<specific synthesis question>"
+```
+
+Use `glean search` to discover authoritative source material and `glean chat --save=false` to synthesize across internal sources without polluting chat history. Follow useful results back to their source documents, and capture relevant titles or links in the plan when they support a decision.
+
+Local code and repository docs remain the source of truth for current implementation behavior; Glean supplies organizational context that may not live in the repo. Reconcile conflicts explicitly. If Glean authentication fails, pause and have the user log back in. If the results do not support a claim, record the knowledge gap instead of guessing.
+
 ### plan doc convention
 
 Default non-trivial planning output should be a single flat markdown file:
@@ -123,7 +143,7 @@ handoff = latest resume instructions
 
 ### Phase 1: Orient
 
-**New plan**: understand the problem space. Read referenced files, docs, or code using read-only inspection. Ask clarifying questions in a single message covering gaps in problem, scope, constraints, and success criteria. Adapt depth to problem size.
+**New plan**: understand the problem space. Read referenced files, docs, or code using read-only inspection. For Wayfair-scoped work, use `glean` to resolve internal business, infrastructure, practice, ownership, or jargon gaps before asking the user questions that internal sources can answer. Ask clarifying questions in a single message covering remaining gaps in problem, scope, constraints, and success criteria. Adapt depth to problem size.
 
 **Resuming**: read the existing plan doc. Summarize `## Current State`, `## Handoff`, open TODOs, Plan Ledger status, and likely next focus. Ask the user what to focus on using 2-3 concrete options + `other`.
 
@@ -263,3 +283,4 @@ Status: `[ ]` not started, `[~]` in progress, `[x]` done and verified, `[!]` blo
 - **Scope the implementation plan.** Each step should be independently verifiable and mirrored in the Plan Ledger when the work is non-trivial.
 - **Preserve user decisions.** When the user makes an explicit design choice, reflect it faithfully.
 - **Use the codebase.** Read existing code to match naming conventions, patterns, and architecture.
+- **Use internal context when relevant.** For Wayfair work, query `glean` for organization-specific context rather than guessing or relying on external web results.
