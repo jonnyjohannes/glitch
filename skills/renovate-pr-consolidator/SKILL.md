@@ -7,39 +7,50 @@ tags: [skill, github, dependencies]
 
 # Renovate PR Consolidator
 
+## Interface
+
+**Inputs**: repository with open Renovate PRs and user-selected upgrades
+**Outputs**: validated consolidated dependency upgrade branch and PR
+**Side effects**: creates a branch, edits dependency/lock files, runs checks, commits, pushes, creates a PR, and optionally closes superseded PRs
+
 ## Phase 1: Discover Open Renovate PRs
 
 1. **Identify the repo** — run `git remote get-url origin`. Extract `owner`
    and `repo`.
 
-2. **List open Renovate PRs** — `gh pr list --author "app/applife-renovate-app"
-   --state open --json number,title,headRefName,url`.
+2. **List open Renovate PRs:**
+
+   ```bash
+   gh pr list --author "app/applife-renovate-app" --state open \
+     --json number,title,headRefName,url
+   ```
+
    Collect every PR's `number`, `title`, `headRefName`, and `url`.
 
 3. **Fetch changed files for each PR** — `gh pr view <number> --json files` (or
    `gh pr diff <number>`) on each PR. Record which dependency files are
    touched and what version changes are proposed. Typical patterns:
 
-    | Ecosystem | Dependency files | Lock files |
-    |-----------|-----------------|------------|
-    | Python | `requirements.txt`, `requirements-test.txt`, `setup.cfg`, `pyproject.toml` | `requirements.lock` |
-    | Java/Kotlin | `pom.xml`, `build.gradle`, `build.gradle.kts` | `gradle.lockfile` |
-    | Node | `package.json` | `package-lock.json`, `yarn.lock` |
+   | Ecosystem   | Dependency files                                                           | Lock files                       |
+   | ----------- | -------------------------------------------------------------------------- | -------------------------------- |
+   | Python      | `requirements.txt`, `requirements-test.txt`, `setup.cfg`, `pyproject.toml` | `requirements.lock`              |
+   | Java/Kotlin | `pom.xml`, `build.gradle`, `build.gradle.kts`                              | `gradle.lockfile`                |
+   | Node        | `package.json`                                                             | `package-lock.json`, `yarn.lock` |
 
 4. **Present the list to the user** as a table:
 
-    ```text
-    ## Open Renovate PRs
+   ```text
+   ## Open Renovate PRs
 
-    | # | Dependency | From → To | File | Security? |
-    |---|-----------|-----------|------|-----------|
-    | 5 | requests  | 2.31.0 → 2.33.0 | requirements.txt | SECURITY |
-    | 6 | cryptography | <46 → <47 | requirements.txt | SECURITY |
-    ...
-    ```
+   | # | Dependency | From → To | File | Security? |
+   |---|-----------|-----------|------|-----------|
+   | 5 | requests  | 2.31.0 → 2.33.0 | requirements.txt | SECURITY |
+   | 6 | cryptography | <46 → <47 | requirements.txt | SECURITY |
+   ...
+   ```
 
-    Ask: **"Which PRs should I include? All, or specific numbers?"**
-    Default to all if the user confirms.
+   Ask: **"Which PRs should I include? All, or specific numbers?"**
+   Default to all if the user confirms.
 
 ## Phase 2: Analyze Compatibility
 
@@ -57,49 +68,50 @@ tags: [skill, github, dependencies]
 
 7. **Present the analysis:**
 
-    ```text
-    ## Compatibility Check
+   ```text
+   ## Compatibility Check
 
-    ✅ No conflicts between selected upgrades.
+   ✅ No conflicts between selected upgrades.
 
-    ⚠️  Breaking changes:
-    - #14 ruff 0.14 → 0.15 (potentially breaking on 0.x)
-    - #13 httpx 0.23 → 0.28 (potentially breaking on 0.x)
+   ⚠️  Breaking changes:
+   - #14 ruff 0.14 → 0.15 (potentially breaking on 0.x)
+   - #13 httpx 0.23 → 0.28 (potentially breaking on 0.x)
 
-    🔒 Security fixes:
-    - #5 requests (CVE-XXXX)
-    - #6 cryptography (CVE-XXXX)
+   🔒 Security fixes:
+   - #5 requests (CVE-XXXX)
+   - #6 cryptography (CVE-XXXX)
 
-    Proceed with all? [Y/n]
-    ```
+   Proceed with all? [Y/n]
+   ```
 
 ## Phase 3: Apply Upgrades
 
-8. **Create a consolidation branch** — from the repo's default branch:
+8. **Create a consolidation branch** — resolve the remote default branch first; do
+   not assume `main`:
 
-    ```bash
-    git fetch origin main
-    git checkout -b chore/consolidate-renovate-upgrades origin/main
-    ```
+   ```bash
+   DEFAULT_BRANCH=$(git remote show origin | awk '/HEAD branch/ {print $NF}')
+   git fetch origin "$DEFAULT_BRANCH"
+   git checkout -b chore/consolidate-renovate-upgrades "origin/$DEFAULT_BRANCH"
+   ```
 
 9. **Apply each version bump** to the source dependency files
    (`requirements.txt`, `requirements-test.txt`, `pom.xml`, etc.).
    Edit only the version specifier lines — do not touch comments, ordering,
    or unrelated lines.
 
-    For each PR, read the patch from Phase 1 and apply the same change to
-    the on-disk file. Use the StrReplace tool (or equivalent) for surgical
-    edits.
+   For each PR, read the patch from Phase 1 and apply the same change to
+   the on-disk file with a precise edit.
 
 10. **Regenerate the lock file.** The method depends on the ecosystem:
 
-    | Ecosystem | Command |
-    |-----------|---------|
-    | Python (Wayfair) | `docker compose run --rm lock-requirements` |
+    | Ecosystem          | Command                                             |
+    | ------------------ | --------------------------------------------------- |
+    | Python (Wayfair)   | `docker compose run --rm lock-requirements`         |
     | Python (pip-tools) | `pip-compile requirements.txt -o requirements.lock` |
-    | Java (Gradle) | `./gradlew dependencies --write-locks` |
-    | Node (npm) | `npm install --package-lock-only` |
-    | Node (yarn) | `yarn install --mode update-lockfile` |
+    | Java (Gradle)      | `./gradlew dependencies --write-locks`              |
+    | Node (npm)         | `npm install --package-lock-only`                   |
+    | Node (yarn)        | `yarn install --mode update-lockfile`               |
 
     Check the repo for a `docker-compose.yaml` service named
     `lock-requirements` first — if present, use it (Wayfair convention).
@@ -117,9 +129,9 @@ tags: [skill, github, dependencies]
     docker compose run --rm test
     ```
 
-    Or the repo's standard test command (check `Makefile`, `pyproject.toml
-    [tool.pytest]`, `docker-compose.yaml` services, or `package.json`
-    scripts).
+    Or use the repo's standard test command. Check `Makefile`, the
+    `pyproject.toml` pytest configuration, `docker-compose.yaml` services,
+    or `package.json` scripts.
 
 13. **Run linters** — if the repo has lint steps (ruff, mypy, eslint),
     run them too. Dependency upgrades can introduce new lint rules
@@ -133,30 +145,14 @@ tags: [skill, github, dependencies]
 
 ## Phase 5: Create the Consolidated PR
 
-15. **Commit all changes:**
+15. **Commit all changes** via [[git-committer]]. Keep dependency files and their
+    regenerated lock files together, follow the repository's commit style, and preserve
+    every included Renovate PR number in the commit body for auditability.
 
-    ```bash
-    git add requirements.txt requirements-test.txt requirements.lock
-    git commit -m "chore: consolidate dependency upgrades
-
-    Combines the following Renovate PRs into a single upgrade:
-    - #5 requests 2.31.0 → 2.33.0 [SECURITY]
-    - #6 cryptography <46 → <47 [SECURITY]
-    - #11 click 8.1.7 → 8.3.1
-    ..."
-    ```
-
-16. **Push and create the PR:**
-
-    ```bash
-    git push -u origin chore/consolidate-renovate-upgrades
-    gh pr create --title "chore: consolidate Renovate dependency upgrades" \
-      --body-file <path-to-body>
-    ```
-
-    Build the body from the repo's PR template; list every included upgrade
-    with PR number and version change; note test results and any breaking
-    changes. Create it ready for review (omit `--draft`).
+16. **Push the branch normally**, then create the PR via [[pr-drafter]]. Tell it this
+    consolidation should be ready for review rather than draft, and include every upgrade,
+    source PR number, version change, test result, and breaking/security note. Its
+    template-fidelity and user-approval gates still apply.
 
 17. **Offer to close the individual Renovate PRs:**
 

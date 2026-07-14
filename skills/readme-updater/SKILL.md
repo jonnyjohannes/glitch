@@ -1,11 +1,11 @@
 ---
 name: readme-updater
 description: >-
-  Scan a repo's structure, code, and agentic assets, then generate or update its
+  Scans a repo's structure, code, and agentic assets, then generates or updates its
   README with setup, install, usage, examples, and references. Use when the user
   says "update the readme", "generate readme", "refresh readme", or wants repo
   documentation brought in sync with current state.
-tools: [Read, Edit, Write, Bash, Glob, Grep, Agent]
+tools: [Read, Edit, Write, Bash, Glob, Grep]
 tags: [skill, docs, readme]
 ---
 
@@ -85,16 +85,13 @@ Include sections **only when the repo has relevant content**. Skip empty section
 When the repo contains agentic assets:
 
 ```markdown
-
 ## Agentic Assets
-
 
 | Asset             | Description |
 | ----------------- | ----------- |
 | [[AGENTS.md]]     | ...         |
 | [[skills/README]] | ...         |
 | `.claude/`        | ...         |
-
 ```
 
 Link with wikilinks where obsidian-sympatico. Include skills table if `skills/README.md` exists.

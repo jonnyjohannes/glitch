@@ -2,30 +2,23 @@
 
 ## Current State
 
-- Status: core skill updates complete / scope check
-- Last updated: 2026-07-12
-- Current focus: decide whether PR/review skills need lightweight plan-doc awareness now, or defer until the core `docs/plans` convention has more mileage.
+- Status: done
+- Last updated: 2026-07-13
+- Current focus: skill suite contracts, plan-doc composition, and global source routing are canonicalized.
 - Handoff lives in: [`## Handoff`](#handoff)
-- Next action: choose whether to update PR/review skills now or stop after the core trio ([[tech-specer]], [[feature-builder]], [[handoff-writer]]).
+- Next action: dogfood the workflows and sharpen individual skills only when real usage exposes drift.
 
 ## Handoff
 
-Resume here by reading this file top to bottom, then continue from [`## Open Questions`](#open-questions) and [`## Plan Ledger`](#plan-ledger).
+The reorganization is complete. The core workflow uses one flat `docs/plans/<slug>.md`
+file with replace-current handoff state; [[tech-specer]], [[feature-builder]], and
+[[handoff-writer]] share that contract. PR drafting, review, and response skills now read
+relevant plan context without introducing extra workflow artifacts.
 
-Current direction from the user:
-
-- Keep the workflow fundamentals simple.
-- Standardize on `docs/plans/<slug>.md`.
-- Prefer `1 feature ~= 1 plan doc`.
-- Centralize workflow state in markdown.
-- Do not prioritize a dashboard/index entrypoint right now.
-- Make current state and handoff obvious inside the plan doc itself.
-- Treat `## Handoff` as the latest resume state, replacing stale content rather than accumulating append-only history.
-- Defer composed/new skills until the fundamentals feel solid.
-- [[tech-specer]] has been updated for the flat `docs/plans/<slug>.md` convention.
-- [[feature-builder]] has been updated to maintain active `docs/plans/<slug>.md` docs while implementing.
-- [[handoff-writer]] has been updated to replace `## Handoff` in active plan docs before falling back to standalone handoff docs.
-- Next decision: whether to update PR/review skills now or defer them.
+The full skill suite has also been canonicalized: every skill has required frontmatter and
+an Interface, stale harness-specific commands were removed, oversized BigQuery action detail
+moved into a supporting reference, and global source selection lives in `tools/README.md`.
+No open design decision remains; resume only if usage reveals a concrete workflow gap.
 
 ## Summary
 
@@ -258,8 +251,8 @@ Status: `[ ]` not started, `[~]` in progress, `[x]` done and verified, `[!]` blo
 - [x] 4. Update `tech-specer` — deliverable: revised skill instructions; verify: new plans are created as flat docs with `Current State` and `Handoff`.
 - [x] 5. Update `feature-builder` — deliverable: revised skill instructions; verify: implementation progress updates the plan doc.
 - [x] 6. Update `handoff-writer` — deliverable: revised skill instructions; verify: active plan docs receive handoff updates.
-- [~] 7. Decide whether PR/review skills need lightweight plan-doc awareness now — deliverable: scope decision; verify: no unnecessary skill churn.
-- [ ] 8. Commit final skill updates — deliverable: clean commits; verify: `git status` is clean except intentionally unrelated user edits.
+- [x] 7. Add lightweight plan-doc awareness to PR/review skills — deliverable: PR skills read relevant plan state; verify: no extra workflow artifacts are required.
+- [x] 8. Canonicalize and commit final skill updates — deliverable: valid skill contracts and clean commits; verify: structural audit passes and `git status` is clean.
 
 ## Verification
 
@@ -279,13 +272,10 @@ Status: `[ ]` not started, `[~]` in progress, `[x]` done and verified, `[!]` blo
 
 ## Open Questions
 
-1. Are the required sections enough: `Current State`, `Handoff`, implementation/ledger, and open questions?
-2. Which skills should be updated in the first pass: only `tech-specer`/`feature-builder`/`handoff-writer`, or also PR/review skills?
+None. Reopen planning only when dogfooding reveals a concrete gap.
 
 ## Implementability Check
 
-Current verdict: **mostly ready**.
-
-Remaining scope decision:
-
-- Decide whether to update PR/review skills now or defer them until the core `docs/plans` convention has been dogfooded more.
+Final verdict: **ready and implemented**. The shared plan-doc contract is represented in
+the core workflow skills, PR/review skills consume it as optional context, and structural
+verification covers the full skill suite.

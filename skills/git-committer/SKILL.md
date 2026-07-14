@@ -1,8 +1,8 @@
 ---
 name: git-committer
 description: >-
-  Analyze a git diff, group related changes into logical commits, stage each
-  group, and commit with concise punchy messages. Use when the user says
+  Analyzes a git diff, groups related changes into logical commits, stages each
+  group, and commits with concise punchy messages. Use when the user says
   "smart commit", "group and commit", "chunk commits", "commit these changes",
   or wants to break a messy working tree into clean atomic commits.
 tools: [Bash]

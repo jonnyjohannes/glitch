@@ -1,7 +1,7 @@
 ---
 name: rosetta-stoner
 description: >-
-  Transliterate and translate classical, historical, and sacred texts into
+  Transliterates and translates classical, historical, and sacred texts into
   English-readable romanized form with line-by-line meanings. Supports any
   source language. Use when the user provides a name, passage, or reference
   to an ancient or classical text and wants a transliteration with translation,

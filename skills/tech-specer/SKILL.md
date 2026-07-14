@@ -5,7 +5,7 @@ description: >-
   docs/plans, with current state, handoff, implementation plan, and Plan Ledger.
   Use when the user wants to write a tech spec, plan longer-running feature work,
   architect a solution, or continue an existing planning file.
-tools: [Read, Write, Edit, Glob, Grep, Bash, Skill]
+tools: [Read, Write, Edit, Glob, Grep, Bash]
 tags: [skill, authoring, planning, docs]
 ---
 
@@ -50,14 +50,10 @@ For Wayfair-scoped plans, treat the authenticated `glean` CLI as an available in
 - architecture guidance and coding practices
 - acronyms, jargon, historical decisions, or prior art
 
-Prefer the local CLI over external web research:
-
-```bash
-glean search "<focused query>" --return-llm-content --page-size 10 --max-snippet-size 10000
-glean chat --save=false "<specific synthesis question>"
-```
-
-Use `glean search` to discover authoritative source material and `glean chat --save=false` to synthesize across internal sources without polluting chat history. Follow useful results back to their source documents, and capture relevant titles or links in the plan when they support a decision.
+Use the known-good commands in `~/.pi/agent/tools/README.md` rather than
+reconstructing Glean's non-obvious flags. Use `glean search` to discover
+authoritative source material and `glean chat` to synthesize across internal
+sources without polluting chat history. Follow useful results back to their source documents, and capture relevant titles or links in the plan when they support a decision.
 
 Local code and repository docs remain the source of truth for current implementation behavior; Glean supplies organizational context that may not live in the repo. Reconcile conflicts explicitly. If Glean authentication fails, pause and have the user log back in. If the results do not support a claim, record the knowledge gap instead of guessing.
 

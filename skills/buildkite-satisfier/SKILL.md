@@ -12,6 +12,12 @@ CLI / `git` for commit correlation. `bk api` is a raw REST/GraphQL passthrough s
 to the authenticated org — use it for anything the porcelain commands don't cover
 (annotations, job logs). Check `bk auth status` if calls fail.
 
+## Interface
+
+**Inputs**: Buildkite URL, pipeline/build number, failing branch, or CI regression context
+**Outputs**: evidence-backed failure diagnosis with likely trigger and suggested fix
+**Side effects**: reads Buildkite/GitHub state; may edit a local trivial fix, but never reruns or unblocks jobs without approval
+
 ## Phase 1: Identify the Build
 
 1. **Determine pipeline and build number.**
@@ -21,7 +27,7 @@ to the authenticated org — use it for anything the porcelain commands don't co
      `bk build list --branch "<branch>"` (add `-p <pipeline>` / `--state failed` to
      narrow) to find the latest failing build.
 
-2. **Fetch build details** — `bk build view <build_number> -p <pipeline>`.
+2. **Fetch build details** — `bk build view <build_number> -p <pipeline> --json`.
    Note: `state` (failed/passed), `branch`, `commit`, `created_at`, and each job's
    `id`, `name`, and `exit_status`.
 
@@ -36,19 +42,22 @@ to the authenticated org — use it for anything the porcelain commands don't co
 
 5. **For each failed job**, read the log via the API:
    - `bk api /pipelines/<pipeline>/builds/<build_number>/jobs/<job_id>/log`
-   - To search a large log, pipe it: `bk api .../jobs/<job_id>/log | grep -nE \
-     "ERROR|FAILED|AssertionError|ModuleNotFoundError|exit code"`
+   - To search a large log:
+
+     ```bash
+     bk api .../jobs/<job_id>/log | grep -nE "ERROR|FAILED|AssertionError|ModuleNotFoundError|exit code"
+     ```
 
 6. **Categorize the failure type:**
 
-   | Type | Signals in logs | Next action |
-   |---|---|---|
-   | Test failure | `FAILED`, `AssertionError`, test file paths | Read the failing test file |
-   | Import/dep error | `ModuleNotFoundError`, `ImportError` | Check `requirements.txt` / `pyproject.toml` |
-   | Lint error | `flake8`, `ruff`, `pylint`, line/col refs | Read the flagged file |
-   | Build/Docker error | `docker build`, `Dockerfile`, `RUN` step | Read Dockerfile |
-   | Timeout/OOM | `Killed`, `signal 9`, `memory` | Note resource limits |
-   | Deploy error | `gcloud`, `kubectl`, `cloudrun.yaml` | Read deploy config |
+   | Type               | Signals in logs                             | Next action                                 |
+   | ------------------ | ------------------------------------------- | ------------------------------------------- |
+   | Test failure       | `FAILED`, `AssertionError`, test file paths | Read the failing test file                  |
+   | Import/dep error   | `ModuleNotFoundError`, `ImportError`        | Check `requirements.txt` / `pyproject.toml` |
+   | Lint error         | `flake8`, `ruff`, `pylint`, line/col refs   | Read the flagged file                       |
+   | Build/Docker error | `docker build`, `Dockerfile`, `RUN` step    | Read Dockerfile                             |
+   | Timeout/OOM        | `Killed`, `signal 9`, `memory`              | Note resource limits                        |
+   | Deploy error       | `gcloud`, `kubectl`, `cloudrun.yaml`        | Read deploy config                          |
 
 ## Phase 3: Correlate with Recent Changes
 
@@ -92,8 +101,7 @@ to the authenticated org — use it for anything the porcelain commands don't co
 ## Rules
 
 - Never rerun the build (`bk build rebuild`) without user confirmation.
-- Never unblock a job unless explicitly asked (do it via `bk api --method PUT
-  /pipelines/<pipeline>/builds/<n>/jobs/<job_id>/unblock` only on request).
+- Never unblock a job unless explicitly asked; only then run `bk api --method PUT /pipelines/<pipeline>/builds/<n>/jobs/<job_id>/unblock`.
 - If multiple jobs failed, diagnose the first chronological failure first — later
   failures are often cascades.
 - If logs or the API are inaccessible, check `bk auth status`; for artifacts use

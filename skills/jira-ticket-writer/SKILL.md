@@ -7,9 +7,15 @@ tags: [skill, jira, tickets]
 
 # Jira Ticket Writer
 
+## Interface
+
+**Inputs**: issue context and optional Jira key, project, or desired issue type
+**Outputs**: concise user-approved Jira bug, story, or task description
+**Side effects**: reads Jira and code context; creates or edits a Jira issue only after explicit approval
+
 ## Phase 1: Understand the Problem
 
-1. **Fetch the ticket if a key was given** — call `jira_get_issue` with `fields: *all` before asking
+1. **Fetch the ticket if a key was given** — run `jira issue view <KEY> --raw` before asking
    anything. Use what's already there to avoid redundant questions.
 1. **Ask only what is still unclear** — if issue type is unknown, present it as an explicit choice:
    `Bug / Story / Task`. For a bug: what is the wrong behavior, what is the expected behavior, and
@@ -53,32 +59,30 @@ A ticket describes the problem — not the solution. Use this template:
 
 > "Does this look right? Should I create/update the ticket now?"
 
-Do NOT call `jira_update_issue` or `jira_create_issue` until the user explicitly confirms.
+Do NOT run `jira issue edit` or `jira issue create` until the user explicitly confirms.
 
 ## Phase 5: Write to Jira
 
 **Updating an existing ticket:**
 
-```text
-Tool: jira_update_issue
-  issue_key: <ticket key>
-  fields: { "description": "<approved description>" }
+```bash
+printf '%s' "$APPROVED_DESCRIPTION" | jira issue edit <KEY> --no-input
 ```
 
-Only update `summary` if the user explicitly asks. Do not change assignee, priority, labels,
-sprint, or status unless asked.
+Only add `--summary` if the user explicitly asks. Do not change assignee, priority,
+labels, sprint, or status unless asked.
 
 **Creating a new ticket:**
 
-```text
-Tool: jira_create_issue
-  project_key: <from existing ticket or ask the user>
-  issue_type: Bug | Story | Task   (match what user said, default to Task)
-  summary: <user-supplied or derived from conversation>
-  description: <approved description>
+```bash
+printf '%s' "$APPROVED_DESCRIPTION" | jira issue create \
+  --project <PROJECT> --type <Bug|Story|Task> --summary "$SUMMARY" \
+  --template - --no-input
 ```
 
-1. **Share the Jira ticket URL** after writing.
+Match the requested issue type; default to `Task` only when the user has no preference.
+After writing, show the created/updated key and its URL from the CLI output. If Jira access
+fails, pause for re-authentication rather than falling back to another integration.
 
 ## Rules
 
@@ -87,4 +91,4 @@ Tool: jira_create_issue
 - Only reference files you actually read — never fabricate code references
 - If code access is unavailable, rely on user-provided context only
 - Keep Acceptance Criteria specific, observable, and limited to 3–5 items
-- Do not call `jira_create_issue` or `jira_update_issue` without explicit user confirmation
+- Do not run `jira issue create` or `jira issue edit` without explicit user confirmation

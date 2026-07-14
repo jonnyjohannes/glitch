@@ -68,32 +68,38 @@ The approved preview and the `--body-file` passed to `gh pr create` must be the 
 4. **Commits on this branch** — `git log <base>..HEAD --oneline`. Understand the
    change narrative and whether multiple concerns need to be grouped in prose.
 
+5. **Plan context** — when the user references a `docs/plans/<slug>.md` file, the
+   branch changes one, or exactly one clearly relevant active plan exists, read its
+   Current State, Summary, Decisions, and Verification. Use it as context; the diff
+   and selected PR template remain authoritative.
+
 ## Phase 2: Linked Issue
 
-5. Check the branch name for an issue number (e.g. `feat/123-add-caching` → `#123`).
+6. Check the branch name for an issue number (e.g. `feat/123-add-caching` → `#123`).
    If found, fetch it: `gh issue view <number> --json title,body,url`.
 
-6. Read the issue title, description, and any linked design docs or acceptance criteria.
+7. Read the issue title, description, and any linked design docs or acceptance criteria.
    These drive the "why" sections of the PR.
 
 ## Phase 3: Build Status
 
-7. **Confirm CI is green** — `bk build list --branch "$(git branch --show-current)"`.
+8. **Confirm CI is green** — `bk build list --branch "$(git branch --show-current)"`.
    Check the `state` of the most recent build.
    - If `passed`: note this in the PR ("CI: ✓ passing").
    - If no build found: note "CI not yet triggered".
 
 ## Phase 4: Internal Context (Glean)
 
-8. **Search for relevant internal docs** — use `glean search "<PR topic keywords>"`,
-   e.g. "keyword mapper performance" or "BigQuery CTE refactor".
+9. **Search for relevant internal docs** — follow the known-good `glean search`
+   recipe in `~/.pi/agent/tools/README.md` with focused PR-topic keywords, e.g.
+   "keyword mapper performance" or "BigQuery CTE refactor".
 
    Look for: design docs, ADRs, Confluence pages, or prior related PRs to link in the
    description. At most 2–3 links — do not flood the PR with tangential references.
 
-9. **Search for related PRs** — `gh pr list --search "<keywords>" --state all` on the
-   same repo. Note if a similar change was previously attempted or reverted — flag this
-   to the user.
+10. **Search for related PRs** — `gh pr list --search "<keywords>" --state all` on the
+    same repo. Note if a similar change was previously attempted or reverted — flag this
+    to the user.
 
 ## Phase 5: Draft Against the Contract
 
@@ -193,7 +199,7 @@ the fidelity check. Write the exact approved body to a file, then run:
 
 ```bash
 gh pr create --draft \
-  --base main \
+  --base <base> \
   --title "<derived from issue title or first summary bullet>" \
   --body-file <path-to-approved-draft>
 # --head defaults to the current branch; drop --draft for ready-for-review;

@@ -25,14 +25,19 @@ tags: [skill, github, code-review]
    Use `gh pr view --json number,headRefName,headRefOid` to confirm the open PR on the
    current branch. If none found, ask the user for the PR number and repo.
 
-2. **Fetch all review threads** — `gh pr view <number> --json reviewThreads` (or
-   `gh api repos/{owner}/{repo}/pulls/<number>/comments` for the raw list, paginated).
-   Skip any thread already resolved.
+2. **Fetch unresolved review threads** — use the GraphQL command in Quick Reference;
+   `gh pr view --json reviewThreads` is not a supported `gh` field. The REST review-comments
+   endpoint is a raw fallback but does not reliably expose thread resolution. Skip resolved
+   threads only when the fetched data proves their state.
 
 3. **Fetch diff** — `gh pr diff <number>` for full context.
 
 4. **Read affected files** — read the current on-disk state of every file referenced
    in unresolved threads. Never rely on the diff alone; the file may have changed.
+
+5. **Read plan context when present** — if the PR or conversation references a relevant
+   `docs/plans/<slug>.md`, read its Current State, Decisions, Plan Ledger, and Verification.
+   Use it to evaluate scope; actual code and tests remain authoritative.
 
 ## Phase 2: Triage (present to user before implementing anything)
 
@@ -64,7 +69,7 @@ For each Implement item:
 
 1. Re-read the current file state (never assume from diff).
 2. Make the **minimal change** that satisfies the comment. Do not refactor adjacent code.
-3. Run `ReadLints` on the edited file. Fix any **new** lint errors introduced.
+3. Run the repository's configured formatter/linter on the edited file. Fix only **new** errors introduced.
 4. Run the narrowest available test scope (e.g. `pytest tests/unit/test_<module>.py -x`).
 5. If a fix causes a test failure, surface the failure to the user and pause.
 
@@ -77,9 +82,8 @@ For each Implement item:
 
 ## Phase 4: Push and Reply
 
-1. Commit with a descriptive message referencing the review (e.g.
-   `address PR review: <short summary>`). Push to the current branch with
-   `git commit && git push`.
+1. Invoke [[git-committer]] to create scoped commits, then push the current branch normally.
+   Never force-push.
 
 2. For each resolved thread, post an inline reply anchored to the original comment:
    - Per thread: `gh api --method POST repos/{owner}/{repo}/pulls/<number>/comments/<comment_id>/replies -f body="..."`
@@ -113,9 +117,23 @@ For each Implement item:
 ## Quick reference (gh)
 
 ```bash
-gh pr view <number> --json reviewThreads,headRefName,headRefOid
-gh api repos/{owner}/{repo}/pulls/<number>/comments            # raw review comments
-gh pr comment <number> --body "..."                            # general (non-inline) comment
+# unresolved review threads; gh --paginate supplies $endCursor
+gh api graphql --paginate \
+  -f owner="$OWNER" -f repo="$REPO" -F number="$NUMBER" \
+  -f query='query($owner:String!, $repo:String!, $number:Int!, $endCursor:String) {
+    repository(owner:$owner, name:$repo) {
+      pullRequest(number:$number) {
+        reviewThreads(first:100, after:$endCursor) {
+          nodes { isResolved comments(first:100) { nodes { databaseId body path line originalLine url } } }
+          pageInfo { hasNextPage endCursor }
+        }
+      }
+    }
+  }' \
+  --jq '.data.repository.pullRequest.reviewThreads.nodes[] | select(.isResolved | not)'
+
+gh api --paginate repos/{owner}/{repo}/pulls/<number>/comments # raw fallback
+gh pr comment <number> --body "..."                            # non-inline comment
 ```
 
 Commit and push normally with git.

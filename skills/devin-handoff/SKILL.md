@@ -1,14 +1,12 @@
 ---
 name: devin-handoff
-description: >
-  Spin off parallel cloud Devin sessions. Hand off a task to a fresh cloud Devin
-  session that runs in the background — each gets its own VM with shell, browser,
-  and full repo access — so you can fan out several sessions at once and keep
-  working locally while they run. Use for parallel or long-running work and
-  anything needing Devin's full environment: multi-file changes, running servers,
-  CI work, browser automation, migrations, or large refactors. Also an API for
-  reading and interacting with current sessions — given a session URL or ID, the
-  check/poll commands return its PR, status, branch, and latest message.
+description: >-
+  Delegates parallel or long-running tasks to cloud Devin sessions and polls
+  their status. Use for multi-file changes, running servers, CI work, browser
+  automation, migrations, large refactors, or when the user provides a Devin
+  session ID and wants to monitor it.
+tools: [Read, Bash]
+tags: [skill, delegation, automation]
 ---
 
 # Devin Handoff
@@ -17,9 +15,15 @@ Hand off a task to Devin. Devin gets its own VM with shell, browser,
 and full repo access. You get a URL to watch progress, or can poll
 until the session completes.
 
-All `scripts/devin-handoff.sh` paths below are relative to this skill's
-directory. If installed as a Claude Code or Codex plugin, use
-`"${CLAUDE_PLUGIN_ROOT}/.agents/skills/devin-handoff/scripts/devin-handoff.sh"`.
+## Interface
+
+**Inputs**: task and optional context, or an existing Devin session ID
+**Outputs**: Devin session URL, status updates, and PR URL when available
+**Side effects**: creates or archives remote Devin sessions; remote sessions may create branches and PRs
+
+Under pi, invoke the script through the global skill path shown below so commands
+work from any repository. If another harness installs the skill elsewhere, resolve
+the same script relative to this `SKILL.md`.
 
 ## Prerequisites
 
@@ -51,7 +55,7 @@ From the current working directory:
 ### 2. Create the session
 
 ```bash
-scripts/devin-handoff.sh create \
+~/.pi/agent/skills/devin-handoff/scripts/devin-handoff.sh create \
   --task "Fix the auth timeout bug — update middleware to respect configured timeout" \
   --context "Investigated src/auth/session.py and src/auth/middleware.py. Timeout is hardcoded at 30m in session.py:42."
 ```
@@ -66,7 +70,7 @@ Tell the user the session URL. If they want to wait for completion,
 poll until the session finishes:
 
 ```bash
-scripts/devin-handoff.sh poll SESSION_ID --interval 15
+~/.pi/agent/skills/devin-handoff/scripts/devin-handoff.sh poll SESSION_ID --interval 15
 ```
 
 The poll command prints status updates and exits when Devin finishes.
@@ -77,11 +81,11 @@ It also prints the PR URL if one was created.
 Archive a session to clean it up from the sidebar:
 
 ```bash
-scripts/devin-handoff.sh archive SESSION_ID --org-id ORG_ID
+~/.pi/agent/skills/devin-handoff/scripts/devin-handoff.sh archive SESSION_ID --org-id ORG_ID
 ```
 
 Or use `--archive` on `poll` to auto-archive when the session finishes:
 
 ```bash
-scripts/devin-handoff.sh poll SESSION_ID --interval 15 --archive --org-id ORG_ID
+~/.pi/agent/skills/devin-handoff/scripts/devin-handoff.sh poll SESSION_ID --interval 15 --archive --org-id ORG_ID
 ```

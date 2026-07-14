@@ -46,6 +46,7 @@ Mirror the resolver’s opening steps so reviews are grounded in the same facts:
 2. **Fetch the diff** — `gh pr diff <number>` for full change context.
 3. **Read on-disk files** — for each file touched or heavily implied by the diff, read the current workspace version. Do not rely on the diff alone for final line numbers or surrounding behavior.
 4. **Tests and config** — if the PR changes behavior or public APIs, read or skim related tests and any config/env docs the diff references.
+5. **Plan context** — if the PR or conversation references a relevant `docs/plans/<slug>.md`, read its Current State, Decisions, Plan Ledger, and Verification. Use it to check intended scope, but trust the actual diff and tests for behavior.
 
 If review comments already exist on the PR, optionally fetch them (`gh api repos/{owner}/{repo}/pulls/<number>/comments`) to avoid duplicating points unless adding new evidence or severity.
 

@@ -5,7 +5,7 @@ description: >-
   scope, maintaining Current State, Handoff, and Plan Ledger, verifying work, and
   committing. Use when the user says "build this", "implement this spec", "code
   this plan", "build the feature", or wants working code from an approved plan.
-tools: [Read, Write, Edit, Bash, Glob, Grep, Skill]
+tools: [Read, Write, Edit, Bash, Glob, Grep]
 tags: [skill, implementation, planning, workflow]
 ---
 

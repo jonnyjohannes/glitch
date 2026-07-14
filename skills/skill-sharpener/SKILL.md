@@ -74,7 +74,18 @@ Read the current SKILL.md in full. Compare the diff hunks against the [[skill-cr
 
 Summarize what changed and why (infer intent from the diff context). Present this summary to the user before rewriting — one or two sentences is fine.
 
-## Step 3: Rewrite SKILL.md
+## Step 3: Best Practices Check
+
+Before rewriting, audit for:
+
+- precise activation language rather than broad capability claims
+- progressive disclosure: core workflow in `SKILL.md`, deep detail in supporting files
+- current CLI/tool names and known-good invocations verified with local `--help` or dry runs
+- required tools only; remove stale harness-specific tools and integrations
+- explicit approval gates and side effects for destructive or external actions
+- overlap with global routing in [[AGENTS]] or related skills that should be linked, not duplicated
+
+## Step 4: Rewrite SKILL.md
 
 Produce an updated SKILL.md that:
 
@@ -85,7 +96,7 @@ Produce an updated SKILL.md that:
 
 Write the updated file. Do not ask for confirmation on the rewrite unless the changes are ambiguous — the user already made the edits, you're just cleaning up the shape.
 
-## Step 4: Reconcile Ecosystem
+## Step 5: Reconcile Ecosystem
 
 ### README
 
@@ -107,7 +118,7 @@ Also update root `README.md` if it exists and has a skills table.
 - Missing wikilinks?
 - Supporting files aligned?
 
-## Step 5: Verify Integrity
+## Step 6: Verify Integrity
 
 Run the [[skill-creator]] verification checklist:
 
@@ -128,4 +139,3 @@ Run the [[skill-creator]] verification checklist:
 - **Refinement needed?** → stay here
 
 This skill is the **default entry point** for all skill work.
-

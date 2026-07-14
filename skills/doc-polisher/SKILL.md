@@ -1,7 +1,7 @@
 ---
 name: doc-polisher
 description: >-
-  Format documents via nvim conform and update YAML frontmatter metadata (tags,
+  Formats documents via nvim conform and updates YAML frontmatter metadata (tags,
   etc.). Use when the user says "polish docs", "format notes", "tag this",
   "clean up notes", or wants docs formatted and metadata standardized.
 tools: [Read, Edit, Bash, Glob]
