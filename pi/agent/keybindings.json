@@ -1,0 +1,7 @@
+{
+  "app.session.new": "ctrl+n",
+  "app.session.resume": "ctrl+r",
+  "app.session.tree": "ctrl+e",
+  "app.session.fork": "ctrl+f",
+  "tui.input.newLine": ["shift+enter", "ctrl+j"]
+}

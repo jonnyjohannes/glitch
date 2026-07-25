@@ -1,0 +1,25 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+/claude/
+/cursor/
+/devin/
+# pi.dev / pi coding agent
+# Keep extensions, skills, themes, settings, and keybindings trackable.
+# pi/agent/extensions/ is intentionally not ignored.
+/pi/agent/AGENTS.md
+/pi/agent/skills
+/pi/agent/auth.json
+/pi/agent/models-store.json
+/pi/agent/npm/
+/pi/agent/sessions/
+/pi/agent/trust.json
+/pi/agent/**/auth*
+/pi/agent/**/credential*
+/pi/agent/*.local.*
+.pi/auth.json
+.pi/git/
+.pi/npm/
+.pi/sessions/
+.pi/*.local.*
