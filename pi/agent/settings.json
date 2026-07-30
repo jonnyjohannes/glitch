@@ -1,9 +1,10 @@
 {
-  "lastChangelogVersion": "0.81.1",
+  "lastChangelogVersion": "0.82.1",
   "defaultProvider": "openai",
   "defaultModel": "gpt-5.6-luna",
-  "defaultThinkingLevel": "xhigh",
+  "defaultThinkingLevel": "medium",
   "packages": [
+    "npm:pi-devin-auth",
     "npm:pi-fancy-loader",
     "npm:pi-provider-vertex-anthropic",
     "npm:pi-web-access"
@@ -21,5 +22,9 @@
   "showHardwareCursor": true,
   "terminal": {
     "showTerminalProgress": false
-  }
+  },
+  "enabledModels": [
+    "openai/gpt-5.6-luna",
+    "openai/gpt-5.6-sol"
+  ]
 }
