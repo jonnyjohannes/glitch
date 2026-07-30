@@ -44,6 +44,16 @@ const THINKING_COLORS: Record<ThinkingLevel, ThemeColor> = {
 	max: "thinkingMax",
 };
 
+const MODEL_COLORS: Partial<Record<string, ThemeColor>> = {
+	luna: "mdHeading",
+	sol: "mdCode",
+};
+
+function getModelColor(modelId: string): ThemeColor {
+	const modelName = modelId.toLowerCase().split("-").pop() ?? modelId.toLowerCase();
+	return MODEL_COLORS[modelName] ?? "mdLink";
+}
+
 // ── helpers ──────────────────────────────────────────────────────────
 
 /** run a command in the background, resolve stdout (empty on error) */
@@ -150,8 +160,9 @@ export default function (pi: ExtensionAPI) {
 					if (model) {
 						const thinkingLevel = pi.getThinkingLevel();
 						const thinkingLabel = thinkingLevel === "off" ? "thinking off" : thinkingLevel;
+						const modelColor = getModelColor(model.id);
 						parts.push(
-							`${theme.fg("accent", BRAIN)} ${theme.fg("accent", model.id)} ${theme.fg("dim", "•")} ${theme.fg(THINKING_COLORS[thinkingLevel], thinkingLabel)}`,
+							`${theme.fg(modelColor, BRAIN)} ${theme.fg(modelColor, model.id)} ${theme.fg("dim", "•")} ${theme.fg(THINKING_COLORS[thinkingLevel], thinkingLabel)}`,
 						);
 					}
 
