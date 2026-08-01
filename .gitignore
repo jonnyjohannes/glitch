@@ -6,8 +6,24 @@ Thumbs.db
 /cursor/
 /devin/
 # pi.dev / pi coding agent
-# Keep extensions, skills, themes, settings, and keybindings trackable.
+# Keep personal/shareable extensions, skills, themes, settings, and keybindings trackable.
 # pi/agent/extensions/ is intentionally not ignored.
+
+# Private/internal enterprise skills. These remain available locally through the
+# symlinked skills directory but are not part of the shareable git source.
+/skills/bigquery-data-explorer/
+/skills/buildkite-satisfier/
+/skills/information-routing/
+/skills/pr-drafter/
+/skills/renovate-pr-consolidator/
+/skills/tech-specer/
+/skills/devin-handoff/
+/skills/feature-builder/
+/skills/handoff-writer/
+/skills/jira-ticket-writer/
+/skills/pr-responder/
+/skills/pr-reviewer/
+/skills/README.local.md
 /pi/agent/AGENTS.md
 /pi/agent/skills
 /pi/agent/auth.json
