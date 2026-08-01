@@ -2,15 +2,14 @@
   "lastChangelogVersion": "0.82.1",
   "defaultProvider": "openai",
   "defaultModel": "gpt-5.6-luna",
-  "defaultThinkingLevel": "medium",
+  "defaultThinkingLevel": "high",
   "packages": [
     "npm:pi-devin-auth",
     "npm:pi-fancy-loader",
     "npm:pi-provider-vertex-anthropic",
     "npm:pi-web-access"
   ],
-  "theme": "rose-pine",
-  "quietStartup": true,
+  "theme": "catppuccin-mocha",
   "compaction": {
     "enabled": true
   },
@@ -20,9 +19,6 @@
   },
   "hideThinkingBlock": false,
   "showHardwareCursor": true,
-  "terminal": {
-    "showTerminalProgress": false
-  },
   "enabledModels": [
     "openai/gpt-5.6-luna",
     "openai/gpt-5.6-sol"
