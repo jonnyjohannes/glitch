@@ -5,6 +5,7 @@ Thumbs.db
 /claude/
 /cursor/
 /devin/
+/hermes/
 # pi.dev / pi coding agent
 # Keep personal/shareable extensions, skills, themes, settings, and keybindings trackable.
 # pi/agent/extensions/ is intentionally not ignored.
