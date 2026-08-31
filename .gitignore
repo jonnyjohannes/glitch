@@ -36,9 +36,8 @@ Thumbs.db
 /pi/agent/**/credential*
 /pi/agent/*.local.*
 
-# Personal workflow context; keep out of public history.
-/MEMORY.md
-/docs/plans/sso-login-automation.md
+# Private workflow context; keep out of public history.
+
 
 .pi/auth.json
 .pi/git/
