@@ -13,6 +13,7 @@ agentic orientation + instruction harness
 
 - [[GLITCH.md]] — canonical entrypoint
 - [skills](./skills/README.md) — index to your suite of SKILL.md capabilities
+- [contracts](./contracts/) — portable artifact shapes and cross-agent work protocols
 
 ## shared operating context
 

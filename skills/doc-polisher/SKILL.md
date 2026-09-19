@@ -16,7 +16,7 @@ tags: [skill, docs, writing]
 **Outputs**: clearer, more consistent writing that preserves the author's meaning
 **Side effects**: edits files only when requested; otherwise returns suggested revisions and rationale
 
-Polish writing, not just grammar. Preserve the author's intent, facts, and useful personality while making the document easier to scan and act on. Follow the broader conventions in [[AGENTS]] and defer specialized document structure to skills such as [[tech-specer]] when they apply.
+Polish writing, not just grammar. Preserve the author's intent, facts, and useful personality while making the document easier to scan and act on. Follow the broader conventions in [[AGENTS]] and defer specialized document structure to skills such as [[idea-specer]] when they apply.
 
 ## Writing principles
 

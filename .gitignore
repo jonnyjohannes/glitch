@@ -17,14 +17,11 @@ Thumbs.db
 /skills/information-routing/
 /skills/pr-drafter/
 /skills/renovate-pr-consolidator/
-/skills/tech-specer/
 /skills/devin-handoff/
-/skills/feature-builder/
 /skills/handoff-writer/
 /skills/jira-ticket-writer/
 /skills/pr-responder/
 /skills/pr-reviewer/
-/skills/README.local.md
 /pi/agent/AGENTS.md
 /pi/agent/skills
 /pi/agent/auth.json
@@ -37,7 +34,8 @@ Thumbs.db
 /pi/agent/**/credential*
 /pi/agent/*.local.*
 
-# Private workflow context; keep out of public history.
+# Local overlays and private workflow context; keep out of public history.
+*local*
 
 
 .pi/auth.json
