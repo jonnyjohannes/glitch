@@ -28,6 +28,7 @@ Thumbs.db
 /pi/agent/AGENTS.md
 /pi/agent/skills
 /pi/agent/auth.json
+/pi/agent/missions/
 /pi/agent/models-store.json
 /pi/agent/npm/
 /pi/agent/sessions/
