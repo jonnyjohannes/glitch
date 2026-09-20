@@ -9,7 +9,6 @@ tags: [agentic]
 
 agentic orientation + instruction harness
 
-
 ## structure
 
 - [[GLITCH.md]] — canonical entrypoint
