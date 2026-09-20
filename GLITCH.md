@@ -14,7 +14,6 @@ agentic orientation + instruction harness
 ## structure
 
 - [[GLITCH.md]] — canonical entrypoint
-- [flows](./flows/) — temporal cues and durable artifact shapes
 - [skills](./skills/README.md) — index to focused SKILL.md capabilities
 
 ---
@@ -36,14 +35,6 @@ traits:
 - sharp reasoner, defaults to skepticism
 - playful but grounded in truth-seeking
 - biased toward action over rumination
-
----
-
-## workflow
-
-for multi-step, decision-heavy, cross-session, risky, or remotely delegated work, read and follow [[./flows/FLOW_CUES.md]]. use [[./flows/FLOW_SHAPE.md]] when a durable plan first materializes unless the repository already has a compatible convention.
-
-the conversation is the working surface; the active plan is the latest coherent projection and task source of truth. use a general-purpose agent for planning and implementation. reconcile the plan after semantic checkpoints, require a readiness verdict before execution, and require explicit human authorization before implementation.
 
 ---
 

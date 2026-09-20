@@ -1,8 +1,12 @@
-# Flow cues
+# Brains
 
-A portable protocol for turning an evolving conversation into a durable plan, then handing that plan to a general-purpose local or remote agent for implementation.
+The interactive planning protocol for turning an evolving conversation into a durable plan, pressure-testing it with the human, and handing the ready plan to an independent executor.
 
 The plan file is the source of truth for the work. Conversation is the working surface; the plan is the latest coherent projection of what matters.
+
+Current state is more important than process history. Git preserves how the repository arrived here; plans, READMEs, indexes, and harness instructions must describe what is true now so a fresh executor can act without reconstructing the past.
+
+Keeping the repository's orientation layer current is part of the flow, not optional cleanup. When behavior, structure, workflow, or ownership changes, update the relevant README, `GLITCH.md`, flow or skill index, and agent-harness adapter together. A stale README or harness instruction is an operational defect: it causes future work to begin from a false current state.
 
 ## When to use a spec
 
@@ -16,7 +20,7 @@ Default plan location:
 docs/plans/<slug>.md
 ```
 
-Use [`FLOW_SHAPE.md`](./FLOW_SHAPE.md) for new plans unless the repository has an established compatible convention.
+Use [`FLOW_SHAPE.md`](../assets/FLOW_SHAPE.md) for new plans unless the repository has an established compatible convention.
 
 ## Lifecycle
 
@@ -68,10 +72,11 @@ At each checkpoint:
 2. determine what is now stale
 3. replace stale descriptions instead of appending a session diary
 4. reconcile Current State, Abstract, Flow, Decisions, Plan Ledger, Verification, and Open Questions
-5. keep incomplete work and uncertainty explicit
-6. briefly tell the human what materially changed in the file
+5. reconcile affected READMEs, indexes, `GLITCH.md`, and agent-harness instructions with the new current state
+6. keep incomplete work and uncertainty explicit
+7. briefly tell the human what materially changed in the files
 
-The plan records current truth, not every path taken to reach it. Preserve rationale only when it captures a non-obvious constraint, explains a consequential rejected alternative, or prevents likely re-litigation. Git history carries incidental evolution.
+The plan and orientation documents record current truth, not every path taken to reach it. Preserve rationale only when it captures a non-obvious constraint, explains a consequential rejected alternative, or prevents likely re-litigation. Git history carries incidental evolution: use it to investigate the past, not as a substitute for updating the current state.
 
 ## Visual model
 
@@ -108,7 +113,7 @@ Prefer rows that are independently understandable, verifiable, commit-sized, and
 
 ## Readiness gate
 
-Before changing status to `ready`, read the whole plan as if arriving without the conversation.
+Before changing status to `ready`, read the whole plan as if arriving without the conversation. Check that the repository's relevant README, indexes, `GLITCH.md`, and agent-harness instructions do not contradict the plan or current implementation.
 
 A plan is ready when:
 
@@ -127,92 +132,20 @@ Readiness means safe to execute, not exhaustive or perfect. If the human asks wh
 
 Changing status to `ready` does not itself authorize implementation.
 
-## Execution authorization
+## Handoff boundary
 
-Implementation requires an explicit human `go`, `implement`, `execute`, `approved`, or equivalent. Creating a remote implementation handoff for a ready plan counts as authorization for that remote executor.
+A ready plan is the handoff boundary. BRAINS does not claim implementation, mutate the
+approved ledger, or replay the executor's implementation loop. Route the plan with
+repository and branch context to an independent executor that receives the separate
+MUSCLE contract exactly once.
 
-Before mutation, the executor must:
-
-1. read the complete plan and repository instructions
-2. confirm status is `ready` and no executor is active
-3. inspect the relevant current implementation
-4. present or internally validate the ledger execution order
-5. claim execution in the plan: set status to `implementing`, name the executor and branch, update Current State, and mark one row `[~]`
-
-## Single-writer rule
-
-One plan has one active executor on one implementation branch.
-
-- Local execution updates the plan beside local implementation changes.
-- Remote execution updates the plan on its remote branch.
-- The base branch remains the last accepted state while a remote branch is active.
-- Do not independently advance the base-branch ledger during remote execution.
-- Merging the implementation branch makes its plan state authoritative on the base branch.
-
-Session status is not implementation evidence. The returned diff, plan updates, tests, and other verification establish what happened.
-
-## Implementation loop
-
-Process one ledger row at a time unless the plan explicitly defines safe parallel ownership:
-
-1. mark the row `[~]`
-2. read the relevant code, docs, and repository conventions
-3. implement only the approved deliverable
-4. run its declared verification
-5. record concise evidence and mark `[x]` only after verification succeeds
-6. reconcile Current State and the next action
-7. commit at coherent, verified boundaries when appropriate
-8. claim the next row
-
-Routine implementation details inside an approved boundary are the executor's responsibility. Do not bounce trivial choices back to planning.
-
-## Surprise and blocked protocol
-
-Stop before improvising when reality materially contradicts the plan, requires changed scope, invalidates an important interface, removes a required dependency, or makes the declared verification insufficient.
-
-Then:
-
-1. mark the active row `[!]`
-2. set status to `blocked`
-3. record what changed, why the plan is unsafe, and the next decision in Current State
-4. return control to the human for planning
-5. revise ledger structure or design only after that decision
-6. rerun the readiness gate and obtain execution authorization again
-
-Do not use `blocked` for ordinary implementation details that remain within approved scope.
-
-## Completion
-
-Before marking `done`:
-
-- every required ledger row is `[x]`
-- each completed row has credible verification evidence
-- cross-cutting and end-to-end checks in `## Verification` have run or are explicitly recorded as external pending
-- implementation and plan state agree
-- Current State summarizes what landed, what was verified, what was not, and any human-owned follow-up
-- commits are intentional and contain no unrelated or secret material
-
-Code completion and operational verification may differ. Use status `done` only for the approved implementation scope, and keep deployment, production, or other external verification truthfully visible in the separate Verification field and section.
-
-## Remote handoff
-
-A remote executor receives:
-
-- repository and branch context
-- the approved plan path or contents
-- this workflow as the execution protocol
-- any minimal task-specific context not already in the plan
-
-The remote branch must return implementation and plan-state updates together. On return, reconcile rather than trusting a remote `done` claim:
-
-- compare each `[x]` row with the diff and evidence
-- confirm blocked or omitted work remains visible
-- review or rerun declared verification
-- inspect commits for scope and secrets
-- merge only when implementation and plan state agree
-
-If a remote executor cannot access the plan by path, include the plan contents in the handoff payload. Never assume a local-only file exists in the remote checkout.
+The executor's returned diff, plan-state updates, verification evidence, and commits
+are the evidence of implementation. Reconcile those results against the plan before
+calling the work complete. If implementation reports a contradiction, return to BRAINS,
+make the changed decision explicit, revise the plan, and rerun readiness.
 
 ## Template evolution
 
-Use the current template for new plans. Existing plans do not need mechanical migration when the template changes. Reconcile an active plan to newer structure only when doing so materially improves clarity, state accuracy, or handoff safety.
+Use the current template for new plans. Existing plans do not need mechanical migration
+when the template changes. Reconcile an active plan to newer structure only when doing
+so materially improves clarity, state accuracy, or handoff safety.
