@@ -31,10 +31,26 @@ and external handoffs require explicit authorization
 
 ## Activate
 
-Read BRAINS completely when flow-specer is invoked. Enter BRAINS by default and
-stay there while the work still needs thinking: establish shared vocabulary,
-contextualize the body of work, pressure-test assumptions, smell-test the model,
-and reconcile the spec artifact at meaningful checkpoints.
+For a **new flow** in a git repository, begin in a dedicated worktree before
+starting spec work:
+
+1. Check `git status --short`. If the current worktree has uncommitted changes,
+   stop and ask how to preserve or carry them; `git wt` creates a new branch from
+   the current commit and does not move dirty files.
+2. Choose a short, descriptive kebab-case topic name (for example,
+   `checkout-flow`) and run `git wt <name>`. This creates a sibling worktree and
+   a new branch with that name. Continue the flow from the new worktree.
+3. If the alias is unavailable, explain that and ask before substituting an
+   equivalent `git worktree add <path> -b <name>` command. If branch/path creation
+   fails, stop and resolve the conflict rather than silently choosing another
+   name or reusing a different branch.
+
+When resuming an existing flow, use its existing worktree; do not create another.
+If there is no git repository, continue without a worktree. After establishing
+that context, read BRAINS completely. Enter BRAINS by default and stay there
+while the work still needs thinking: establish shared vocabulary, contextualize
+the body of work, pressure-test assumptions, smell-test the model, and reconcile
+the spec artifact at meaningful checkpoints.
 
 Use FLOW_SHAPE for a new spec unless the repository already has a compatible
 convention. Do not impose this workflow outside an active flow-specer flow.
