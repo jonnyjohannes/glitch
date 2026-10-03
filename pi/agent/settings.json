@@ -1,8 +1,6 @@
 {
-  "lastChangelogVersion": "0.87.1",
+  "lastChangelogVersion": "1.0.0",
   "defaultProvider": "openai-codex",
-  "defaultModel": "gpt-5.6-luna",
-  "defaultThinkingLevel": "medium",
   "packages": [
     "npm:pi-fancy-loader",
     "npm:pi-web-access",
@@ -26,7 +24,6 @@
     "anthropic/claude-opus-5",
     "anthropic/claude-fable-5"
   ],
-  "tuiMode": "fullscreen",
   "modelThinkingLevels": {
     "openai-codex/gpt-6-luna": "high",
     "openai-codex/gpt-6-sol": "high",
