@@ -1,11 +1,10 @@
 {
-  "lastChangelogVersion": "0.84.4",
-  "defaultProvider": "openai",
-  "defaultModel": "gpt-5.6-luna",
-  "defaultThinkingLevel": "medium",
+  "lastChangelogVersion": "1.0.0",
+  "defaultProvider": "openai-codex",
   "packages": [
     "npm:pi-fancy-loader",
-    "npm:pi-web-access"
+    "npm:pi-web-access",
+    "npm:pi-subagents"
   ],
   "theme": "rose-pine",
   "compaction": {
@@ -18,8 +17,19 @@
   "hideThinkingBlock": false,
   "showHardwareCursor": true,
   "enabledModels": [
-    "openai/gpt-5.6-luna",
-    "openai/gpt-5.6-sol"
+    "openai-codex/gpt-6-luna",
+    "openai-codex/gpt-6-sol",
+    "openai-codex/gpt-6-astra",
+    "anthropic/claude-sonnet-5",
+    "anthropic/claude-opus-5",
+    "anthropic/claude-fable-5"
   ],
-  "tuiMode": "fullscreen"
+  "modelThinkingLevels": {
+    "openai-codex/gpt-6-luna": "high",
+    "openai-codex/gpt-6-sol": "high",
+    "openai-codex/gpt-6-astra": "high",
+    "anthropic/claude-fable-5": "high",
+    "anthropic/claude-opus-5": "high",
+    "anthropic/claude-fable-5-1": "high"
+  }
 }

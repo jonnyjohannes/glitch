@@ -65,16 +65,6 @@ function bg(cmd: string, args: string[], cwd: string): Promise<string> {
 	});
 }
 
-/** repo-relative dir, or ~/… fallback */
-function relativeDir(cwd: string, gitRoot: string | null): string {
-	if (gitRoot) {
-		const rel = cwd.startsWith(gitRoot + "/") ? cwd.slice(gitRoot.length + 1) : ".";
-		return rel || ".";
-	}
-	const home = process.env.HOME;
-	return home && cwd.startsWith(home) ? "~" + cwd.slice(home.length) : cwd;
-}
-
 export default function (pi: ExtensionAPI) {
 	// ── cached git state (refreshed in background) ───────────────────
 	let gitRoot: string | null = null;
@@ -141,10 +131,6 @@ export default function (pi: ExtensionAPI) {
 
 				render(width: number): string[] {
 					const parts: string[] = [];
-
-					// ── 1. folder + dir (rose-pine iris via accent) ───
-					const dir = relativeDir(ctx.cwd, gitRoot);
-					parts.push(theme.fg("toolTitle", `${FOLDER} ${dir}`));
 
 					// ── 2. git branch + PR + dirty (rose-pine gold) ───
 					const branch = footerData.getGitBranch();

@@ -1,141 +1,129 @@
 ---
 name: skill-sharpener
 description: >-
-  Refines an existing skill by reconciling manual edits, diffs, and drift back
-  into a clean, template-compliant SKILL.md. Use when updating, cleaning up, or
-  aligning a skill with current agentic best practices.
-tools: [Read, Edit, Bash, Glob]
-tags: [skill, meta-skill]
+  Creates or refines skills by reconciling human intent, pending edits, and
+  structural drift into a concise canonical SKILL.md. Use when adding, updating,
+  cleaning up, or aligning a skill with the current agent workflow.
+tools: [Read, Write, Edit, Glob, Grep, Bash]
+tags: [skill, meta-skill, maintenance]
 ---
 
-# Refine Skill
+# Skill Sharpener
+
+Turn an emerging or edited workflow into a focused skill without sanding away the human's intent.
 
 ## Interface
 
-**Inputs**: existing skill with pending edits, drift, or cleanup needed
-**Outputs**: rewritten SKILL.md aligned with [[skill-creator]] template
-**Side effects**: modifies SKILL.md, may update `skills/README.md` descriptions
+**Inputs**: a skill name or path plus the intended behavior, pending edits, or cleanup request
+**Outputs**: canonical `SKILL.md` and aligned skill indexes or supporting files
+**Side effects**: creates or edits skill files and may update repository indexes
 
-Companion to [[skill-creator]].
+## Core principle
 
-Rewrites an existing skill so that **manual edits, implicit intent, and structural drift** are reconciled into a clean, canonical SKILL.md aligned with the current skill system.
+A skill earns its place when invocation changes agent behavior in a valuable, non-obvious way. Keep durable formats and invariants in templates, scripts, or process documentation rather than turning every convention into another skill.
 
-Also ensures the skill remains discoverable and consistent within the broader [[AGENTS]] ecosystem.
+Human edits are the source of truth for what the workflow should become. Sharpen their shape, activation, and boundaries without replacing that intent with generic best practices.
 
-## Core Principle
+## Canonical skill contract
 
-A skill is not just a file — it is an interface between:
+A skill should have:
 
-- human intent (messy, evolving)
-- system constraints (structured, predictable)
-- agent behavior (contextual, adaptive)
+- frontmatter with a lowercase hyphenated `name`, trigger-oriented `description`, minimal `tools`, and `tags` containing `skill`
+- a concise `## Interface` stating inputs, outputs, and side effects
+- explicit activation cues and boundaries
+- workflows, conditionals, or output templates only where they reduce ambiguity
+- approval gates for destructive or external actions
+- links to genuinely composable skills or `[[AGENTS]]` conventions
+- progressive disclosure into one-level-deep supporting files when detail would obscure the core workflow
+- a body under 300 lines unless complexity clearly justifies otherwise
+- a matching entry in the appropriate shared or local skill index
 
-This process aligns all three.
-
-## Determine Approach
-
-**Skill directory exists?** → Continue
-**Missing?** → _"That skill doesn't exist yet — run [[skill-creator]] to scaffold it first."_ Stop.
+Prefer direct instructions over explanations of obvious model capabilities. Remove stale harness-specific integrations, duplicated global guidance, and ceremonial steps that do not alter behavior.
 
 ## Workflow
 
-- [ ] Step 1: Detect Changes
-- [ ] Step 2: Understand Intent
-- [ ] Step 3: Best Practices Check
-- [ ] Step 4: Rewrite SKILL.md
-- [ ] Step 5: Reconcile Ecosystem
-- [ ] Step 6: Verify Integrity
+- [ ] Step 1: Inspect the skill and pending changes
+- [ ] Step 2: Recover intent and evaluate whether a skill is warranted
+- [ ] Step 3: Rewrite or create the skill
+- [ ] Step 4: Reconcile the surrounding ecosystem
+- [ ] Step 5: Verify the result
 
-## Step 1: Detect Changes
+### Step 1: Inspect
 
-Check all possible change surfaces:
+For an existing skill, read its complete `SKILL.md` and inspect every change surface:
 
 ```bash
-git diff -- skills/<skill-name>/SKILL.md
-git diff --cached -- skills/<skill-name>/SKILL.md
-git diff HEAD -- skills/<skill-name>/SKILL.md
+git diff -- skills/<name>/
+git diff --cached -- skills/<name>/
+git status --short -- skills/<name>/
 ```
 
-Also check for untracked or new supporting files.
+Also inspect supporting files and the relevant skill indexes.
 
-### Outcomes
+**Pending changes?** Treat them as the primary evidence of evolving intent.
 
-- **Diffs found** → capture the diff output and proceed.
-- **No diffs and file is tracked** → tell the user there are no pending changes. Ask if they want a general cleanup pass instead.
-- **File is untracked** → the skill was just created manually. Read the full file and treat the entire content as "new edits" to integrate.
+**No pending changes?** If the user requested cleanup or alignment, continue with a general audit. Otherwise report that there is nothing pending and offer concrete refinement targets.
 
-## Step 2: Understand Intent
+**Missing skill?** Infer a first draft from the request and comparable skills, then apply the same sharpening workflow. Ask only when activation, side effects, or required behavior is genuinely ambiguous.
 
-Read the current SKILL.md in full. Compare the diff hunks against the [[skill-creator]] template structure:
+Before editing, summarize the inferred intent in one or two sentences.
 
-1. **Frontmatter** — did `name`, `description`, or `tags` change?
-2. **Body sections** — were sections added, removed, reordered, or rewritten?
-3. **Supporting files** — were new files (reference.md, examples.md, scripts/) added or removed alongside the SKILL.md?
+### Step 2: Evaluate
 
-Summarize what changed and why (infer intent from the diff context). Present this summary to the user before rewriting — one or two sentences is fine.
+Ask whether the proposed behavior should be a skill at all:
 
-## Step 3: Best Practices Check
+- **Agent behavior requiring judgment, branching, tools, or interaction?** A skill may be appropriate.
+- **Stable protocol shared by humans and multiple agent environments?** Prefer process documentation.
+- **Durable file shape or invariant?** Prefer a template, schema, linter, or deterministic check.
+- **Generic capability the model already performs reliably?** Use direct instructions instead of adding a skill.
 
-Before rewriting, audit for:
+If a skill remains appropriate, audit:
 
-- precise activation language rather than broad capability claims
-- progressive disclosure: core workflow in `SKILL.md`, deep detail in supporting files
-- current CLI/tool names and known-good invocations verified with local `--help` or dry runs
-- required tools only; remove stale harness-specific tools and integrations
-- explicit approval gates and side effects for destructive or external actions
-- overlap with global routing in [[AGENTS]] or related skills that should be linked, not duplicated
+- precise triggers rather than broad capability claims
+- a clear boundary with adjacent skills
+- minimal required tools
+- current, locally verified commands where applicable
+- explicit approval and external-side-effect rules
+- portable core behavior separated from private or organization-specific overlays
+- useful composition through links rather than duplicated instructions
 
-## Step 4: Rewrite SKILL.md
+If the behavior does not warrant a skill, explain why and propose 2-3 concrete alternatives plus `other` before removing or relocating anything.
 
-Produce an updated SKILL.md that:
+### Step 3: Rewrite or create
 
-1. **Preserves the user's edits** — the manual changes are the source of truth for _what_ the skill should do.
-2. **Conforms to [[skill-creator]] template** — proper frontmatter, concise body, wikilinks where natural, under 300 lines.
-3. **Fixes template drift** — if the manual edit broke structure (missing frontmatter field, inconsistent terminology, verbose explanations), fix it while keeping the user's intent.
-4. **Maintains wikilinks** — ensure `[[references]]` to other skills and `[[AGENTS]]` are present where appropriate.
+Produce a concise `SKILL.md` that:
 
-Write the updated file. Do not ask for confirmation on the rewrite unless the changes are ambiguous — the user already made the edits, you're just cleaning up the shape.
+1. preserves explicit human decisions and useful personality
+2. conforms to the canonical skill contract above
+3. makes activation and stopping conditions obvious
+4. keeps the core workflow readable without unnecessary ceremony
+5. moves deep reference material into supporting files only when useful
 
-## Step 5: Reconcile Ecosystem
+Do not ask for confirmation when the requested direction is clear. Do not silently broaden scope or change external behavior.
 
-### README
+### Step 4: Reconcile the ecosystem
 
-If the skill's `description` changed, update the matching row in `skills/README.md`:
+- update the matching shared or local index entry when the name or description changes
+- add a missing index entry according to the repository's grouping convention
+- remove stale links after renames or deletions
+- inspect related skills for duplicated ownership or broken composition
+- update supporting files when the refined workflow invalidates them
 
-```markdown
-| [[skill-name]] | Short description (max 100 chars) |
-```
+Keep index descriptions concise and consistent with the skill's actual behavior.
 
-TOC descriptions must be **100 characters or fewer**. The full description lives in the SKILL.md frontmatter.
+### Step 5: Verify
 
-If the skill isn't in the TOC yet, add it following alphabetical order or the existing grouping convention.
+Check:
 
-Also update root `README.md` if it exists and has a skills table.
+- [ ] frontmatter parses and follows the canonical contract
+- [ ] description says what the skill does and when to use it
+- [ ] listed tools are necessary
+- [ ] interface names inputs, outputs, and side effects
+- [ ] triggers, boundaries, approval gates, and stopping conditions are clear
+- [ ] process docs and artifact contracts have not been needlessly embedded as skills
+- [ ] related links and supporting files resolve
+- [ ] body is concise and terminology is consistent
+- [ ] shared or local index matches the final skill
+- [ ] diff contains only intended changes
 
-### Ecosystem Fit
-
-- Overlap with other skills?
-- Missing wikilinks?
-- Supporting files aligned?
-
-## Step 6: Verify Integrity
-
-Run the [[skill-creator]] verification checklist:
-
-- [ ] `name` field: lowercase, hyphens only, max 64 chars
-- [ ] `description`: third person, includes what + when, has trigger terms
-- [ ] `tools`: lists required tools (Bash, Read, Edit, Glob, etc.)
-- [ ] `tags: [skill, ...]` includes `skill` + at least one domain tag
-- [ ] `## Interface` section present with inputs, outputs, side effects
-- [ ] Cross-links to composable skills where natural
-- [ ] Wikilinks to related skills and [[AGENTS]] where appropriate
-- [ ] Body under 300 lines
-- [ ] Consistent terminology
-- [ ] `skills/README.md` entry matches current description
-
-## Delegation Pattern
-
-- **Creation needed?** → [[skill-creator]]
-- **Refinement needed?** → stay here
-
-This skill is the **default entry point** for all skill work.
+Report the paths changed, the important behavioral decisions preserved, verification performed, and any remaining ambiguity.

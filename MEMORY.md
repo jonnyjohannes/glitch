@@ -2,13 +2,15 @@
 
 > canonical memory for Glitch's shared agent behavior and harness ecosystem
 >
-> last reviewed: 2026-08-03
+> last reviewed: 2026-09-20
 
 ## summary
 
 Glitch is Jonny's personal, flexible agentic persona. This repository is its canonical source for shared identity, behavior, skills, and harness adapters; it is not a product repo or a runtime-state dump.
 
-The current center of gravity is `pi.dev`, used through Jonny's existing computer workflow:
+The current center of gravity is `pi.dev`, used through Jonny's existing computer workflow. The repository now also presents the shared layer through a lightweight GitHub-facing `README.md`: it is a showable map, while `GLITCH.md` remains the canonical agent orientation.
+
+Jonny's existing computer workflow:
 
 ```text
 jonny
@@ -23,6 +25,7 @@ Glitch should stay personal without becoming isolated: its persona and general s
 
 ### canonical sources
 
+- `README.md` — GitHub-facing overview and glanceable map of Glitch.
 - `GLITCH.md` — shared identity, tone, reasoning stance, and interaction rules.
 - `skills/` — canonical skill namespace.
   - `README.md` indexes shareable skills.
@@ -43,6 +46,21 @@ Pi is the first and current primary cockpit because Jonny is converging on it fo
 - **Hermes** — additional local runtime surface
 
 Pi currently carries Glitch-specific UI/status behavior, safety tripwires, protected-path checks, themes, model/provider configuration, and extensions. Keep runtime state such as auth, caches, sessions, plugin metadata, and generated files out of the canonical layer.
+
+### spec interaction
+
+`skills/flow-specer/` is the current standard for how to flow with a spec. It defines the interaction protocol and artifact shape, not the design of each individual body of work:
+
+```text
+conversation ── BRAINS ──▶ context-shaped spec ── ready ──▶ MUSCLE
+```
+
+- **BRAINS** is the human-driven thinking boundary: contextualize, pressure-test, smell-test, and reconcile the spec.
+- **MUSCLE** is the autonomous implementation boundary: receive the ready spec, its implementation contract, the repository, and branch; then keep implementation and spec state aligned.
+- `FLOW_SHAPE.md` is the standard artifact template.
+- BRAINS and MUSCLE are intentionally separate tuning surfaces.
+
+The flow moved from standalone `flows/` documents into the portable `flow-specer` skill. Remote implementation handoffs inject MUSCLE once through the Devin handoff adapter; the adapter remains harness-specific and ignored by the canonical git layer.
 
 ### personal context
 
@@ -133,8 +151,10 @@ Do not use public web research for questions answerable from the repository or a
 After meaningful ecosystem changes:
 
 - update `MEMORY.md` when architecture, ownership boundaries, or current direction changes
+- update `README.md` when the public-facing map or showcase context changes
 - update `GLITCH.md` when identity or universal behavior changes
 - update `skills/README.md` when the shareable skill inventory changes
+- update `skills/flow-specer/` when the spec interaction protocol or BRAINS/MUSCLE boundary changes
 - keep adapter-specific changes in adapter directories
 - inspect `git status --short --ignored` before committing so runtime state is not mistaken for source
 - verify symlinks and resource discovery after changing harness wiring
