@@ -11,12 +11,12 @@ harness adapters should point back here rather than copy the shared behavior.
 
 ## agentic assets
 
-| asset | purpose |
-| --- | --- |
-| [`GLITCH.md`](./GLITCH.md) | canonical agent orientation and shared operating context |
-| [`skills/README.md`](./skills/README.md) | index of the shareable skill suite |
-| [`skills/README.local.md`](./skills/README.local.md) | local skill index overlay |
-| [`MEMORY.md`](./MEMORY.md) | durable repository memory |
+| asset                                                | purpose                                                  |
+| ---------------------------------------------------- | -------------------------------------------------------- |
+| [`GLITCH.md`](./GLITCH.md)                           | canonical agent orientation and shared operating context |
+| [`skills/README.md`](./skills/README.md)             | index of the shareable skill suite                       |
+| [`skills/README.local.md`](./skills/README.local.md) | local skill index overlay                                |
+| [`MEMORY.md`](./MEMORY.md)                           | durable repository memory                                |
 
 ## repository shape
 
@@ -27,9 +27,7 @@ skills/                portable shared skills and indexes
   flow-specer/         spec interaction protocol
   README.md            shareable skill index
   README.local.md      local overlay index
-claude/                harness-specific state and adapters
-cursor/                harness-specific state and adapters
-devin/                harness-specific state and adapters
+pi/                    harness
 ```
 
 Auth, caches, sessions, generated state, and harness-specific configuration stay
