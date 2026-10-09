@@ -21,7 +21,8 @@ of truth; the conversation is the working surface.
 
 ## Interface
 
-**Inputs**: the current conversation, repository context, and any active spec
+**Inputs**: the current conversation, repository context, and—when resuming—an
+active spec or enough information to locate it
 
 **Outputs**: a context-shaped spec, a `ready` / `not ready` implementation
 verdict, and—only when explicitly authorized—a handoff to MUSCLE
@@ -31,8 +32,30 @@ and external handoffs require explicit authorization
 
 ## Activate
 
-For a **new flow** in a git repository, begin in a dedicated worktree before
-starting spec work:
+First decide whether this is a **new flow** or a **resume**. A `/flow-specer`
+invocation in a fresh agent, session, or worktree can resume an existing flow;
+that is not a request to create another worktree.
+
+### Resume
+
+1. Use a plan path the human provides. If none is provided, inspect the
+   repository's conventional `docs/plans/` location and identify a clearly
+   matching active plan. If there are multiple plausible plans, ask which one;
+   do not guess.
+2. Read the whole plan and applicable repository instructions. Treat the plan's
+   current state as the durable context; do not require or try to reconstruct the
+   conversation that produced it. Then continue in BRAINS or MUSCLE according to
+   the plan's status and the human's request.
+3. Stay in the current worktree. Do not create, switch, or claim another
+   worktree just because this is a new session. If the plan is not available in
+   this checkout, explain that it must be made available (for example, provide
+   its path, or copy/commit it into this worktree) and pause rather than
+   creating a replacement plan or worktree.
+
+### New flow
+
+For a genuinely new flow in a git repository, begin in a dedicated worktree
+before starting spec work:
 
 1. Check `git status --short`. If the current worktree has uncommitted changes,
    stop and ask how to preserve or carry them; `git wt` creates a new branch from
@@ -45,11 +68,10 @@ starting spec work:
    fails, stop and resolve the conflict rather than silently choosing another
    name or reusing a different branch.
 
-When resuming an existing flow, use its existing worktree; do not create another.
 If there is no git repository, continue without a worktree. After establishing
-that context, read BRAINS completely. Enter BRAINS by default and stay there
-while the work still needs thinking: establish shared vocabulary, contextualize
-the body of work, pressure-test assumptions, smell-test the model, and reconcile
+context, read BRAINS completely. Enter BRAINS by default and stay there while
+the work still needs thinking: establish shared vocabulary, contextualize the
+body of work, pressure-test assumptions, smell-test the model, and reconcile
 the spec artifact at meaningful checkpoints.
 
 Use FLOW_SHAPE for a new spec unless the repository already has a compatible
