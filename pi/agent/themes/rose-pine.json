@@ -2,9 +2,9 @@
   "$schema": "https://raw.githubusercontent.com/badlogic/pi-mono/main/packages/coding-agent/src/modes/interactive/theme/theme-schema.json",
   "name": "rose-pine",
   "vars": {
-    "base": "#191724",
-    "surface": "#1f1d2e",
-    "overlay": "#26233a",
+    "base": "#19191b",
+    "surface": "#222326",
+    "overlay": "#2b2c30",
     "muted": "#6e6a86",
     "subtle": "#908caa",
     "text": "#e0def4",
@@ -14,9 +14,9 @@
     "pine": "#31748f",
     "foam": "#9ccfd8",
     "iris": "#c4a7e7",
-    "hlLow": "#21202e",
-    "hlMed": "#403d52",
-    "hlHigh": "#524f67"
+    "hlLow": "#252629",
+    "hlMed": "#3a3b40",
+    "hlHigh": "#4c4d53"
   },
   "colors": {
     "accent": "iris",
@@ -31,14 +31,14 @@
     "text": "",
     "thinkingText": "subtle",
     "selectedBg": "overlay",
-    "userMessageBg": "surface",
+    "userMessageBg": "#333437",
     "userMessageText": "",
     "customMessageBg": "surface",
     "customMessageText": "",
     "customMessageLabel": "iris",
     "toolPendingBg": "surface",
-    "toolSuccessBg": "#1e2430",
-    "toolErrorBg": "#2a1e28",
+    "toolSuccessBg": "#242729",
+    "toolErrorBg": "#292528",
     "toolTitle": "foam",
     "toolOutput": "",
     "mdHeading": "rose",
@@ -72,8 +72,8 @@
     "bashMode": "gold"
   },
   "export": {
-    "pageBg": "#191724",
-    "cardBg": "#1f1d2e",
-    "infoBg": "#26233a"
+    "pageBg": "#19191b",
+    "cardBg": "#222326",
+    "infoBg": "#2b2c30"
   }
 }

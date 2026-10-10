@@ -43,8 +43,8 @@ const THINKING_COLORS: Record<ThinkingLevel, ThemeColor> = {
 };
 
 const MODEL_COLORS: Partial<Record<string, ThemeColor>> = {
-	luna: "mdHeading",
-	sol: "mdCode",
+	luna: "success",
+	sol: "warning",
 };
 
 function getModelColor(modelId: string): ThemeColor {
