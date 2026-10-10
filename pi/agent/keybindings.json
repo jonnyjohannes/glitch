@@ -1,3 +1,4 @@
 {
+  "tui.altScreen.search": "alt+f",
   "tui.input.newLine": "shift+enter"
 }
