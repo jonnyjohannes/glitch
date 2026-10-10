@@ -4,13 +4,14 @@ const pane = process.env.TMUX_PANE;
 const agentOption = "@pi-agent";
 const stateOption = "@pi-state";
 
-type PiState = "idle" | "working" | "done";
+type PiState = "idle" | "working" | "done" | "needs-input";
 const DONE_TIMEOUT_MS = 24 * 60 * 60 * 1000;
 
 export default function (pi: ExtensionAPI) {
 	if (!pane) return;
 
 	let currentState: PiState | undefined;
+	let stateBeforePrompt: PiState | undefined;
 	let pendingOperation = Promise.resolve();
 	let doneTimer: ReturnType<typeof setTimeout> | undefined;
 
@@ -41,10 +42,10 @@ export default function (pi: ExtensionAPI) {
 			clearDoneTimer();
 		}
 
-		return enqueue(async () => {
-			if (currentState === state) return;
-			currentState = state;
+		if (currentState === state) return pendingOperation;
+		currentState = state;
 
+		return enqueue(async () => {
 			try {
 				await pi.exec("tmux", ["set-option", "-p", "-t", pane, agentOption, "1"]);
 				await pi.exec("tmux", ["set-option", "-p", "-t", pane, stateOption, state]);
@@ -54,11 +55,18 @@ export default function (pi: ExtensionAPI) {
 		});
 	}
 
+	function setActivityState(state: PiState): Promise<void> | void {
+		if (currentState === "needs-input") {
+			stateBeforePrompt = state;
+			return;
+		}
+		return setState(state);
+	}
+
 	function clearState(): Promise<void> {
 		clearDoneTimer();
+		currentState = undefined;
 		return enqueue(async () => {
-			currentState = undefined;
-
 			try {
 				await pi.exec("tmux", ["set-option", "-p", "-t", pane, "-u", agentOption]);
 				await pi.exec("tmux", ["set-option", "-p", "-t", pane, "-u", stateOption]);
@@ -68,9 +76,22 @@ export default function (pi: ExtensionAPI) {
 		});
 	}
 
-	pi.on("session_start", () => setState("idle"));
-	pi.on("agent_start", () => setState("working"));
-	pi.on("agent_settled", () => setState("done"));
+	pi.on("session_start", () => {
+		stateBeforePrompt = undefined;
+		return setState("idle");
+	});
+	pi.on("agent_start", () => setActivityState("working"));
+	pi.on("ui_prompt_start", () => {
+		if (currentState === "needs-input") return;
+		stateBeforePrompt = currentState ?? "idle";
+		return setState("needs-input");
+	});
+	pi.on("ui_prompt_end", () => {
+		const state = stateBeforePrompt;
+		stateBeforePrompt = undefined;
+		if (state) return setState(state);
+	});
+	pi.on("agent_settled", () => setActivityState("done"));
 
 	pi.on("session_shutdown", async (event) => {
 		// Internal session replacement and /reload keep this Pi process alive.
