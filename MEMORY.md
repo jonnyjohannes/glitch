@@ -68,6 +68,8 @@ Durable context should live in files almost always. `~/src/exp/a-notes/` is the 
 
 Glitch has no broader development-environment context by default. When Jonny has questions about or wants to work on his workflow or development environment, he opens an instance of Glitch in the dotfiles repository so that local context applies there.
 
+Pi theme preference: keep `userMessageBg`, `customMessageBg`, `toolPendingBg`, `toolSuccessBg`, and `toolErrorBg` gray/charcoal overall. Adjust shades and allow subtle hue tints to fit the colorscheme or convey meaning (for example, a muted red error background); avoid making them strongly saturated.
+
 ### optional capabilities
 
 Calendar management, digital-garden work, project exploration or execution, and daily/weekly reviews remain possible capabilities. They should be added gradually when real needs arise and should fit the terminal/Arc-centered Glitch workflow. Google Calendar is not a standing requirement; the earlier calendar focus was an artificial problem to apply Glitch to rather than a need that emerged naturally.
