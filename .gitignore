@@ -30,6 +30,7 @@ Thumbs.db
 /pi/agent/models-store.json
 /pi/agent/npm/
 /pi/agent/pi-subagents/
+/pi/agent/pi-web-access/
 /pi/agent/sessions/
 /pi/agent/web-search-cache/
 /pi/agent/trust.json
