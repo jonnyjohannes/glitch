@@ -1,5 +1,5 @@
 /**
- * Glitch footer
+ * Glitch status row above the editor
  *
  *   󰉋 .   main *14  󰧑 gpt-5.5 • medium   ██░░░░░░░░ 23%
  *
@@ -143,15 +143,12 @@ export default function (pi: ExtensionAPI) {
 			void refreshGitState(ctx.cwd);
 		}, 15_000);
 
-		ctx.ui.setFooter((tui, theme, footerData) => {
+		// Keep the bottom clear instead of falling back to Pi's built-in footer.
+		ctx.ui.setFooter(() => ({ render: () => [] }));
+		ctx.ui.setWidget("glitch-status", (tui, theme) => {
 			requestRender = () => tui.requestRender();
-			const branchUnsub = footerData.onBranchChange(() => {
-				void refreshGitState(ctx.cwd);
-				tui.requestRender();
-			});
 
 			return {
-				dispose: branchUnsub,
 				invalidate() {},
 
 				render(width: number): string[] {
@@ -190,10 +187,10 @@ export default function (pi: ExtensionAPI) {
 					const leftWidth = Math.min(visibleWidth(left), Math.max(0, width - rightWidth - (left ? 2 : 0)));
 					const visibleLeft = truncateToWidth(left, leftWidth);
 					const gap = Math.max(0, width - visibleWidth(visibleLeft) - rightWidth);
-					return [`${visibleLeft}${" ".repeat(gap)}${right}`, ""];
+					return [`${visibleLeft}${" ".repeat(gap)}${right}`];
 				},
 			};
-		});
+		}, { placement: "aboveEditor" });
 	});
 
 	// refresh on turn end (dirty count / context may have changed)
@@ -217,8 +214,12 @@ export default function (pi: ExtensionAPI) {
 
 	// ── commands ──────────────────────────────────────────────────────
 	pi.registerCommand("default-footer", {
-		description: "restore the default pi footer",
+		description: "restore the default pi footer and remove the status row",
 		handler: async (_args, ctx) => {
+			clearInterval(refreshTimer);
+			refreshTimer = undefined;
+			requestRender = undefined;
+			ctx.ui.setWidget("glitch-status", undefined);
 			ctx.ui.setFooter(undefined);
 			ctx.ui.notify("default footer restored", "info");
 		},
